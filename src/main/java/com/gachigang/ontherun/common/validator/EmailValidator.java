@@ -10,7 +10,7 @@ import lombok.NonNull;
  * The class implements the {@link ConstraintValidator} interface.
  */
 
-public class EmailValidator implements ConstraintValidator<ValidEmail, String>{
+public class EmailValidator implements ConstraintValidator<ValidEmail, String> {
 
     @Override
     public boolean isValid(@NonNull String email,

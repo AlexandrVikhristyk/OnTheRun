@@ -1,10 +1,11 @@
 package com.gachigang.ontherun.persistence.entity;
 
 import com.gachigang.ontherun.common.validator.ValidEmail;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -24,22 +25,19 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "surname")
     String surname;
-
-    @Column(name = "lastname")
     String lastname;
 
     @NotBlank
-    @NotEmpty
     String login;
 
     @ValidEmail
     String email;
 
+    @NotBlank
+    String password;
+
     String dateOfBirth;
-
     String country;
-
     String city;
 }
