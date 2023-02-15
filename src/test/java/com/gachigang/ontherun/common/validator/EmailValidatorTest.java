@@ -16,9 +16,9 @@ public class EmailValidatorTest {
     private final static String correctEmail = "test@gmail.com";
     private final static String incorrectEmail = "testgmailcom";
     @InjectMocks
-    EmailValidator emailValidator;
+    private EmailValidator emailValidator;
     @Mock
-    ConstraintValidatorContext context;
+    private ConstraintValidatorContext context;
 
     @Test
     public void testIsValidEmailShouldReturnTrue() {
