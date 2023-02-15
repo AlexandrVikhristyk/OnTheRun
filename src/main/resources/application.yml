@@ -9,11 +9,11 @@ spring:
     username: 'postgres'
     password: 'toor'
     url: jdbc:postgresql://localhost:5432/ontherun
-    jpa:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
       hibernate:
-        ddl-auto: update
-      properties:
-        hibernate:
-          dealect: org.hibernate.dealect.PostgreSQLDialect
-          format_sql: 'true'
-      show-sql: 'true'
+        dealect: org.hibernate.dealect.PostgreSQLDialect
+        format_sql: 'true'
+    show-sql: 'true'
