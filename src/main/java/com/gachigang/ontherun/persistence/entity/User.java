@@ -1,45 +1,97 @@
 package com.gachigang.ontherun.persistence.entity;
 
 import com.gachigang.ontherun.common.validator.ValidEmail;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 /**
  * User class represents a user in the db.
  */
 
 @Entity
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class User {
+@Table(name = "userInfo")
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-
-    @Column(name = "surname")
-    String surname;
-
-    @Column(name = "lastname")
-    String lastname;
-
-    @NotBlank
-    @NotEmpty
-    String login;
+    private Long id;
+    private String surname;
+    private String lastname;
+    private String login;
 
     @ValidEmail
-    String email;
+    private String email;
 
-    String dateOfBirth;
+    private String dateOfBirth;
+    private String country;
+    private String city;
+    private String password;
 
-    String country;
+    @ManyToMany
+    @JoinTable(
+            name = "users_role",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"))
+    private Set<Role> roles;
 
-    String city;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities
+                = new ArrayList<>();
+        for (Role role: roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+            role.getPermissions().stream()
+                    .map(p -> new SimpleGrantedAuthority(p.getName()))
+                    .forEach(authorities::add);
+        }
+
+        return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
