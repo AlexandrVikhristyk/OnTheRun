@@ -21,14 +21,14 @@ public class UserServiceTest {
 
     private final static User USER = User.builder()
             .id(1L)
-            .surname("Lena")
-            .lastname("Golovach")
+            .surname("testsurname")
+            .lastname("testlastname")
             .login("testLogin")
             .email("test@email.com")
             .dateOfBirth("31/12/2002")
             .country("Ukraine")
             .city("Kyiv")
-            .password("yashalava")
+            .password("testpassword")
             .build();
 
     private final static String EMAIL = "test@email.com";
