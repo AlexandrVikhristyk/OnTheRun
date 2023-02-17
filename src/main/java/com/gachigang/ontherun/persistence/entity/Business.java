@@ -19,6 +19,6 @@ public class Business {
     private String country;
     private String city;
 
-    @ManyToMany(mappedBy = "userBusiness")
-    Set<User> businessUsers;
+    @ManyToMany(mappedBy = "businesses")
+    Set<User> owners;
 }
