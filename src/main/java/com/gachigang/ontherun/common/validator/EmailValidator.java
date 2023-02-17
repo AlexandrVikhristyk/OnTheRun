@@ -5,6 +5,7 @@ import lombok.NonNull;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.util.regex.Matcher;
 
 /**
  * Class validate an email address using a regular expression.
@@ -20,7 +21,7 @@ public class EmailValidator implements ConstraintValidator<ValidEmail, String> {
     }
 
     private boolean validateEmail(@NonNull final String email) {
-        final var matcher = ApplicationConstants.Validation.EMAIL_PATTERN.matcher(email);
+        final Matcher matcher = ApplicationConstants.Validation.EMAIL_PATTERN.matcher(email);
         return matcher.matches();
     }
 }
