@@ -65,6 +65,15 @@ public class User implements UserDetails {
         return authorities;
     }
 
+    @ManyToMany
+    @JoinTable(
+            name = "users_business",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "business_id", referencedColumnName = "id"))
+    private Set<Business> businesses;
+
     @Override
     public String getPassword() {
         return password;
