@@ -14,7 +14,7 @@ public class InitializationData implements CommandLineRunner {
     private final RoleRepository roleRepository;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         Role staff = new Role();
         staff.setName(UserRole.STAFF.getRole());
         roleRepository.save(staff);

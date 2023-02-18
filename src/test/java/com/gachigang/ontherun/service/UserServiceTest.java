@@ -7,12 +7,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.BDDAssumptions.given;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
@@ -40,9 +39,8 @@ public class UserServiceTest {
     private UserService userService;
 
     @Test
-    public void testSaveUser_successfully() {
-        when(userRepository.save(USER))
-                .thenReturn(USER);
+    public void testSaveUser_successful() {
+        when(userRepository.save(USER)).thenReturn(USER);
 
         final User createdUser = userService.save(USER);
 
@@ -50,15 +48,19 @@ public class UserServiceTest {
         assertNotNull(createdUser);
     }
 
-
     @Test
-    public void testGetUserByEmail_isCorrect() {
-        when(userRepository.findUserByEmail(EMAIL))
-                .thenReturn(Optional.ofNullable(USER));
+    public void testGetUserByEmail_Positive() {
+        when(userRepository.findUserByEmail(EMAIL)).thenReturn(Optional.ofNullable(USER));
 
         final User actualUser = userService.getByEmail(EMAIL);
 
         verify(userRepository, times(1)).findUserByEmail(EMAIL);
         assertEquals(USER, actualUser);
+    }
+
+    @Test
+    public void testGetUserByEmail_Negative() {
+        when(userRepository.findUserByEmail(any())).thenThrow(new UsernameNotFoundException("User by this email not found"));
+        assertThrows(UsernameNotFoundException.class, () -> userService.getByEmail(any()));
     }
 }
