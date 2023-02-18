@@ -2,18 +2,35 @@ package com.gachigang.ontherun.common.validator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
+
+/**
+ * The @PasswordMatches annotation is used to verify that a given string value is a valid password.
+ * The annotation accepts a `message` attribute, which specifies the error
+ * message to be shown if the password is not valid. It also supports
+ * the standard `groups` and `payload` attributes for use in validation
+ * groups and payloads.
+ * The annotation is used by the PasswordMatcherValidator class to perform the actual validation.
+ */
 
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
+@Documented
 @Constraint(validatedBy = PasswordMatchesValidator.class)
 public @interface PasswordMatches {
+
+    /**
+     * Error message.
+     */
     String message() default "Passwords do not match";
 
+    /**
+     * Group attribute.
+     */
     Class<?>[] groups() default {};
 
+    /**
+     * Payload attribute.
+     */
     Class<? extends Payload>[] payload() default {};
 }
