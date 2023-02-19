@@ -4,6 +4,8 @@ import com.gachigang.ontherun.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
+import java.time.LocalDate;
+
 @Builder
 @AllArgsConstructor
 public class UserRegisterResponse {
@@ -13,7 +15,7 @@ public class UserRegisterResponse {
     private String lastname;
     private String login;
     private String email;
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
     private String country;
     private String city;
 }
