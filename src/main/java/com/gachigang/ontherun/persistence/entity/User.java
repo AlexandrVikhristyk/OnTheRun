@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -37,7 +38,7 @@ public class User implements UserDetails {
     @ValidEmail
     private String email;
 
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
     private String country;
     private String city;
     private String password;
@@ -64,6 +65,15 @@ public class User implements UserDetails {
 
         return authorities;
     }
+
+    @ManyToMany
+    @JoinTable(
+            name = "users_business",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "business_id", referencedColumnName = "id"))
+    private Set<Business> businesses;
 
     @Override
     public String getPassword() {
