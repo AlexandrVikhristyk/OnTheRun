@@ -9,11 +9,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
@@ -62,7 +62,7 @@ public class UserServiceTest {
 
     @Test
     public void testGetUserByEmail_Negative() {
-        when(userRepository.findUserByEmail(any())).thenThrow(new UsernameNotFoundException("User by this email not found"));
-        assertThrows(UsernameNotFoundException.class, () -> userService.getByEmail(any()));
+        when(userRepository.findUserByEmail(EMAIL)).thenReturn(Optional.empty());
+        assertThrows(UsernameNotFoundException.class, () -> userService.getByEmail(EMAIL));
     }
 }
