@@ -1,22 +1,14 @@
 package com.gachigang.ontherun.common.validator;
 
-import com.gachigang.ontherun.common.ApplicationConstants;
-import lombok.NonNull;
+import com.gachigang.ontherun.payload.user.request.RegisterRequest;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.regex.Matcher;
 
-public class PasswordMatchesValidator implements ConstraintValidator<PasswordMatches, String> {
+public class PasswordMatchesValidator implements ConstraintValidator<PasswordMatches, RegisterRequest> {
 
     @Override
-    public boolean isValid(@NonNull String password,
-                           @NonNull ConstraintValidatorContext constraintValidatorContext) {
-        return validatePassword(password);
-    }
-
-    private boolean validatePassword(@NonNull final String password) {
-        final Matcher matcher = ApplicationConstants.Validation.PASSWORD_PATTERN.matcher(password);
-        return matcher.matches();
+    public boolean isValid(RegisterRequest registerRequest, ConstraintValidatorContext constraintValidatorContext) {
+        return registerRequest.getPassword().equals(registerRequest.getConfirmPassword());
     }
 }
