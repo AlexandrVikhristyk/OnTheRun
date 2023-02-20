@@ -24,13 +24,13 @@ public class PasswordValidatorTest {
 
     @ParameterizedTest(name = "#{index} - Run test with password = {0}")
     @MethodSource("validPasswordProvider")
-    void test_password_regex_valid(String password) {
+    void testIsValidPassword_regexValid(String password) {
         assertTrue(passwordValidator.isValid(password, context));
     }
 
     @ParameterizedTest(name = "#{index} - Run test with password = {0}")
     @MethodSource("invalidPasswordProvider")
-    void test_password_regex_invalid(String password) {
+    void testIsValidPassword_regexInvalid(String password) {
         assertFalse(passwordValidator.isValid(password, context));
     }
 
