@@ -17,7 +17,7 @@ public class InitializationData implements CommandLineRunner {
     private static String ddlAuto;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         if (!ddlAuto.equals("create") && !ddlAuto.equals("create-drop")) {
             for (UserRole userRole : UserRole.values()) {
                 Role role = new Role();
