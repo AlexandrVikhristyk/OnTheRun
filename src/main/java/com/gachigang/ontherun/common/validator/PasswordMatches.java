@@ -5,8 +5,7 @@ import javax.validation.Payload;
 import java.lang.annotation.*;
 
 /**
- * The @PasswordMatches annotation is used to verify that a given password is equal to
- * one that have already existed in the DB.
+ * The @PasswordMatches annotation is used to verify that password is equal to confirmPassword in the DTO.
  * The annotation accepts a `message` attribute, which specifies the error
  * message to be shown if the password is not equals. It also supports
  * the standard `groups` and `payload` attributes for use in validation
