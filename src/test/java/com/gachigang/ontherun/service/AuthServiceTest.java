@@ -3,27 +3,21 @@ package com.gachigang.ontherun.service;
 import com.gachigang.ontherun.common.enums.UserRole;
 import com.gachigang.ontherun.payload.user.request.LoginRequest;
 import com.gachigang.ontherun.payload.user.request.RegisterRequest;
-import com.gachigang.ontherun.persistence.entity.Permission;
 import com.gachigang.ontherun.persistence.entity.Role;
 import com.gachigang.ontherun.persistence.entity.User;
-import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collections;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -41,17 +35,16 @@ public class AuthServiceTest {
     private UserService userService;
 
     @InjectMocks
-    private  AuthService authService;
-
+    private AuthService authService;
 
     @Test
-    public void testAuthenticateUser() {
+    public void testAuthenticateUser_Positive() {
         Role role = Role.builder()
                 .name(UserRole.USER.getRole())
                 .permissions(Collections.EMPTY_LIST)
                 .build();
 
-        LoginRequest loginRequest =LoginRequest.builder()
+        LoginRequest loginRequest = LoginRequest.builder()
                 .email(EMAIL)
                 .password(PASSWORD)
                 .build();
@@ -74,7 +67,32 @@ public class AuthServiceTest {
     }
 
     @Test
-    public void testUserRegister() {
+    public void testAuthenticateUser_Negative() {
+        Role role = Role.builder()
+                .name(UserRole.USER.getRole())
+                .permissions(Collections.EMPTY_LIST)
+                .build();
+
+        LoginRequest loginRequest = LoginRequest.builder()
+                .email(EMAIL)
+                .password(PASSWORD + "_wrong")
+                .build();
+
+        User user = User.builder()
+                .email(EMAIL)
+                .password(PASSWORD)
+                .roles(Collections.singleton(role))
+                .build();
+
+        when(userService.getByEmail(EMAIL)).thenReturn(user);
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenThrow(new BadCredentialsException("Invalid email or password"));
+
+        assertThrows(BadCredentialsException.class, () -> authService.authenticateUser(loginRequest));
+    }
+
+    @Test
+    public void testUserRegister_Positive() {
         RegisterRequest registerRequest = RegisterRequest.builder()
                 .email(EMAIL)
                 .password(PASSWORD)
@@ -82,6 +100,21 @@ public class AuthServiceTest {
                 .build();
 
         authService.register(registerRequest);
+
+        verify(encoder).encode(any());
+        verify(userService).save(any());
+    }
+
+    @Test
+    public void testUserRegister_Negative() {
+        RegisterRequest registerRequest = RegisterRequest.builder()
+                .email(EMAIL)
+                .password(PASSWORD)
+                .confirmPassword(PASSWORD)
+                .build();
+
+        doThrow(new RuntimeException("Database connection failed")).when(userService).save(any());
+        assertThrows(RuntimeException.class, () -> authService.register(registerRequest));
 
         verify(encoder).encode(any());
         verify(userService).save(any());
