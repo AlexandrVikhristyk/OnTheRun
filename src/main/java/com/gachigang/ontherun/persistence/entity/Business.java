@@ -21,4 +21,7 @@ public class Business {
 
     @ManyToMany(mappedBy = "businesses")
     Set<User> owners;
+
+    @OneToMany(mappedBy = "business")
+    private Set<Department> departments;
 }
