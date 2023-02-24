@@ -23,7 +23,7 @@ public class AuthService {
     public void authenticateUser(LoginRequest loginRequest) {
         User user = userService.getByEmail(loginRequest.getEmail());
 
-        if (!user.isEnabled()) {
+        if (user.isEnabled()) {
             throw new AccountDisabledException("Account has been disabled");
         }
 
