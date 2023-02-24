@@ -12,13 +12,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class InitializationData implements CommandLineRunner {
 
-    private final RoleRepository roleRepository;
     @Value("${spring.jpa.properties.hibernate.ddl-auto}")
     private static String ddlAuto;
+    private final RoleRepository roleRepository;
 
     @Override
     public void run(String... args) {
-        if (!ddlAuto.equals("create") && !ddlAuto.equals("create-drop")) {
+        if (ddlAuto.startsWith("create")) {
             for (UserRole userRole : UserRole.values()) {
                 Role role = new Role();
                 role.setName(userRole.getRole());
