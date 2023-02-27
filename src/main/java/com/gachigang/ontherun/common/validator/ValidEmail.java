@@ -23,7 +23,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Documented
 @Constraint(validatedBy = EmailValidator.class)
-
 public @interface ValidEmail {
 
     /**
