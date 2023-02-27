@@ -2,7 +2,10 @@ package com.gachigang.ontherun.payload.user.request;
 
 import com.gachigang.ontherun.common.validator.PasswordMatches;
 import com.gachigang.ontherun.common.validator.ValidEmail;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -11,6 +14,9 @@ import javax.validation.constraints.Size;
 
 @Data
 @PasswordMatches
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class RegisterRequest {
     @Email(message = "It should have email format")
     @NotBlank(message = "User email is required")

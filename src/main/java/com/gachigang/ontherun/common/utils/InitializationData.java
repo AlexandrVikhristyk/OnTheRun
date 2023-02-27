@@ -15,16 +15,10 @@ public class InitializationData implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Role staff = new Role();
-        staff.setName(UserRole.STAFF.getRole());
-        roleRepository.save(staff);
-
-        Role manager = new Role();
-        manager.setName(UserRole.MANAGER.getRole());
-        roleRepository.save(manager);
-
-        Role user = new Role();
-        user.setName(UserRole.USER.getRole());
-        roleRepository.save(user);
+        for(UserRole userRole : UserRole.values()) {
+            Role role = new Role();
+            role.setName(userRole.getRole());
+            roleRepository.save(role);
+        }
     }
 }
