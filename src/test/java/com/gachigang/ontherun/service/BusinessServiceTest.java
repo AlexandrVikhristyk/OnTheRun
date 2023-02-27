@@ -22,4 +22,11 @@ class BusinessServiceTest {
         businessService.getAllBusiness();
         verify(businessRepository, times(1)).findAll();
     }
+
+    @Test
+    void testDeleteBusinessById_Positive() {
+        final Long id = 1L;
+        businessRepository.deleteBusinessById(id);
+        verify(businessRepository, times(1)).deleteBusinessById(1L);
+    }
 }

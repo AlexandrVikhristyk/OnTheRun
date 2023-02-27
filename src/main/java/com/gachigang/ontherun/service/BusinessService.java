@@ -16,7 +16,6 @@ public class BusinessService {
     private final BusinessRepository businessRepository;
 
     public List<Business> getAllBusiness() {
-
         return businessRepository.findAll();
     }
 
