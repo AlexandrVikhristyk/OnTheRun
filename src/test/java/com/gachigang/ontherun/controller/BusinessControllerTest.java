@@ -1,5 +1,6 @@
 package com.gachigang.ontherun.controller;
 
+import com.gachigang.ontherun.persistence.entity.Business;
 import com.gachigang.ontherun.service.BusinessService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,5 +23,12 @@ class BusinessControllerTest {
     void testGetAllBusiness() {
         businessController.getAllBusiness();
         verify(businessService, times(1)).getAllBusiness();
+    }
+
+    @Test
+    void testUpdateBusiness() {
+        Business testBusiness = new Business();
+        businessController.updateBusiness(testBusiness, 1L);
+        verify(businessService, times(1)).updateBusiness(testBusiness, 1L);
     }
 }

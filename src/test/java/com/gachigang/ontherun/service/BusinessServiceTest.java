@@ -22,4 +22,10 @@ class BusinessServiceTest {
         businessService.getAllBusiness();
         verify(businessRepository, times(1)).findAll();
     }
+
+    @Test
+    void testGetBusinessById(){
+        businessService.getBusinessById(1L);
+        verify(businessRepository, times(1)).getById(1L);
+    }
 }
