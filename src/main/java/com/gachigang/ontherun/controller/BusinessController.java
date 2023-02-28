@@ -1,5 +1,6 @@
 package com.gachigang.ontherun.controller;
 
+import com.gachigang.ontherun.payload.user.request.UpdateBusinessRequest;
 import com.gachigang.ontherun.persistence.entity.Business;
 import com.gachigang.ontherun.service.BusinessService;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,7 @@ public class BusinessController {
     }
 
     @PutMapping(value = "/business/{id}")
-    public Business updateBusiness(@RequestBody Business business, @PathVariable(value = "id") Long id){
+    public Business updateBusiness(@RequestBody UpdateBusinessRequest business, @PathVariable Long id){
         return businessService.updateBusiness(business, id);
     }
 }
