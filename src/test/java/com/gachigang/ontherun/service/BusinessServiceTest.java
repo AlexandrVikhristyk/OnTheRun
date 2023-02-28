@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,7 +32,7 @@ class BusinessServiceTest {
     }
 
     @Test
-    void testFindBusinessByOwners() {
+    void testFindBusinessByOwners_Positive() {
         Business business = Business.builder().
                 id(1L)
                 .name("testName").
@@ -44,5 +45,11 @@ class BusinessServiceTest {
         when(businessRepository.findBusinessByOwners(user)).thenReturn(Collections.singletonList(business));
         List<Business> result = businessService.findBusinessByOwners(user);
         assertNotNull(result);
+    }
+    @Test
+    void testFindBusinessByOwners_Negative(){
+        User user = new User();
+        lenient().when(businessRepository.findBusinessByOwners(user)).thenReturn(Collections.emptyList());
+        assertThrows(NullPointerException.class, () ->businessService.findBusinessByOwners(user));
     }
 }
