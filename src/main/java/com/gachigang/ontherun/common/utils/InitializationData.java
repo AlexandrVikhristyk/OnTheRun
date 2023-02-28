@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class InitializationData implements CommandLineRunner {
 
-    @Value("create-drop")
+    @Value("${spring.jpa.hibernate.ddl-auto}")
     private String ddlAuto;
     private final RoleRepository roleRepository;
 
