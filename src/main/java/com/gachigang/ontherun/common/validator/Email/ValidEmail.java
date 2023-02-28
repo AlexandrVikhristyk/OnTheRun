@@ -1,4 +1,4 @@
-package com.gachigang.ontherun.common.validator;
+package com.gachigang.ontherun.common.validator.Email;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -17,7 +17,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * groups and payloads.
  * The annotation is used by the EmailValidator class to perform the actual validation.
  */
-
 @Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE,
         ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.TYPE_USE})
 @Retention(RUNTIME)
