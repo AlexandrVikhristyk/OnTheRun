@@ -3,17 +3,18 @@ package com.gachigang.ontherun.common.utils;
 import com.gachigang.ontherun.common.enums.UserRole;
 import com.gachigang.ontherun.persistence.entity.Role;
 import com.gachigang.ontherun.persistence.repository.RoleRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-@AllArgsConstructor
+
 @Component
+@RequiredArgsConstructor
 public class InitializationData implements CommandLineRunner {
 
-    @Value("${spring.jpa.properties.hibernate.ddl-auto}")
-    private static String ddlAuto;
+    @Value("${spring.jpa.hibernate.ddl-auto}")
+    private String ddlAuto;
     private final RoleRepository roleRepository;
 
     @Override
