@@ -14,13 +14,14 @@ public class BusinessService {
 
     private final BusinessRepository businessRepository;
 
+
     public List<Business> getAllBusiness() {
         return businessRepository.findAll();
     }
 
     public List<Business> findBusinessByOwners(User user) {
         if (user.getBusinesses().isEmpty()) {
-            throw new RuntimeException("Not found Business for this user: = " + user);
+            throw new RuntimeException("Not found Business for this user: " + user);
         }
         return businessRepository.findBusinessByOwners(user);
     }

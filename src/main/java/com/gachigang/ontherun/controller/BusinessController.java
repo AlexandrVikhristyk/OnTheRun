@@ -25,7 +25,7 @@ public class BusinessController {
         return businessService.getAllBusiness();
     }
 
-    @GetMapping("/owner/business")
+    @GetMapping("/owner")
     public List<Business> findBusinessByOwners(@AuthenticationPrincipal User user)  {
         return businessService.findBusinessByOwners(user);
     }
