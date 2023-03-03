@@ -20,6 +20,6 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, St
 
     @Override
     public boolean isValid(@NonNull final String email, ConstraintValidatorContext context) {
-        return userRepository.existsByEmail(email) == false;
+        return !userRepository.existsByEmail(email);
     }
 }
