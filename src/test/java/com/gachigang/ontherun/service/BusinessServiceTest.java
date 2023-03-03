@@ -27,6 +27,6 @@ class BusinessServiceTest {
     void testDeleteBusinessById_Positive() {
         final Long id = 1L;
         businessRepository.deleteBusinessById(id);
-        verify(businessRepository, times(1)).deleteBusinessById(1L);
+        verify(businessRepository, times(1)).deleteBusinessById(id);
     }
 }
