@@ -1,16 +1,16 @@
 package com.gachigang.ontherun.persistence.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
 
+@Builder
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Business {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
