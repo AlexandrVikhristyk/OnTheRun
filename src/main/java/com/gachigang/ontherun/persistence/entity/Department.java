@@ -4,18 +4,11 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "department")
 public class Department {
     @Id
-    @SequenceGenerator(
-            name = "department_sequence",
-            sequenceName = "department_sequence",
-            allocationSize = 1
-    )
 
     @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "department_sequence"
+            strategy =  GenerationType.IDENTITY
     )
 
     @Column(
