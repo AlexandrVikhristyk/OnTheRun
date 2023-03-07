@@ -1,6 +1,6 @@
 package com.gachigang.ontherun.persistence.entity;
 
-import com.gachigang.ontherun.common.validator.ValidEmail;
+import com.gachigang.ontherun.common.validator.Email.ValidEmail;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

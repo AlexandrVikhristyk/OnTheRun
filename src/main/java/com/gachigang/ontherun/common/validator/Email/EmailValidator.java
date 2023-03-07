@@ -1,4 +1,4 @@
-package com.gachigang.ontherun.common.validator;
+package com.gachigang.ontherun.common.validator.Email;
 
 import com.gachigang.ontherun.common.ApplicationConstants;
 import lombok.NonNull;
@@ -11,7 +11,6 @@ import java.util.regex.Matcher;
  * Class validate an email address using a regular expression.
  * The class implements the {@link ConstraintValidator} interface.
  */
-
 public class EmailValidator implements ConstraintValidator<ValidEmail, String> {
 
     @Override
