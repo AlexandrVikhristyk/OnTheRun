@@ -1,6 +1,7 @@
 package com.gachigang.ontherun.common.validator;
 
 
+import com.gachigang.ontherun.common.validator.Email.EmailValidator;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

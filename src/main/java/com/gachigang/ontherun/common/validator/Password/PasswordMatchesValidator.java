@@ -1,4 +1,4 @@
-package com.gachigang.ontherun.common.validator;
+package com.gachigang.ontherun.common.validator.Password;
 
 import com.gachigang.ontherun.payload.user.request.RegisterRequest;
 
