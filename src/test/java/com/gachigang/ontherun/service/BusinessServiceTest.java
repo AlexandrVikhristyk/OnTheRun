@@ -32,6 +32,13 @@ class BusinessServiceTest {
     }
 
     @Test
+    void testDeleteBusinessById_Positive() {
+        final Long id = 1L;
+        businessRepository.deleteBusinessById(id);
+        verify(businessRepository, times(1)).deleteBusinessById(id);
+    }
+
+    @Test
     void testFindBusinessByOwners_Positive() {
         Business business = Business.builder().
                 id(1L)

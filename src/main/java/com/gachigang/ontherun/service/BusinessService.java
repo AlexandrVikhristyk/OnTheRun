@@ -4,7 +4,9 @@ import com.gachigang.ontherun.persistence.entity.Business;
 import com.gachigang.ontherun.persistence.entity.User;
 import com.gachigang.ontherun.persistence.repository.BusinessRepository;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,6 +19,11 @@ public class BusinessService {
 
     public List<Business> getAllBusiness() {
         return businessRepository.findAll();
+    }
+
+    @Transactional
+    public void deleteBusinessById(@NonNull final Long id) {
+        businessRepository.deleteBusinessById(id);
     }
 
     public List<Business> findBusinessByOwners(User user) {
