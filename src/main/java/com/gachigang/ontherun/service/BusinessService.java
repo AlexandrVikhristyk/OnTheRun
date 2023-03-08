@@ -10,7 +10,6 @@ import lombok.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -34,10 +33,9 @@ public class BusinessService {
         businessById.setName(businessRequest.getName());
         businessById.setCountry(businessRequest.getCountry());
         businessById.setCity(businessRequest.getCity());
-        Set<Long> oldOwnersId = businessById.getOwners().stream().map(User::getId).collect(Collectors.toSet());
-        if (businessRequest.getOwners().equals(oldOwnersId)) return businessRepository.save(businessById);
-        businessById.getOwners().removeAll(businessById.getOwners());
-        businessById.getOwners().addAll(userRepository.findAllByIdIn(businessRequest.getOwners()));
+        if (!businessRequest.getOwners().equals(businessById.getOwners().stream().map(User::getId).collect(Collectors.toSet()))) {
+            businessById.getOwners().addAll(userRepository.findAllByIdIn(businessRequest.getOwners()));
+        }
         return businessRepository.save(businessById);
     }
 }
