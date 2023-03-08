@@ -8,11 +8,8 @@ import com.gachigang.ontherun.service.BusinessService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,8 +31,9 @@ public class BusinessController {
     }
 
     @PutMapping(value = "/business/{id}")
-    public Business updateBusiness(@RequestBody UpdateBusinessRequest business, @PathVariable Long id){
+    public Business updateBusiness(@RequestBody UpdateBusinessRequest business, @PathVariable Long id) {
         return businessService.updateBusiness(business, id);
+    }
     /**
      * Deletes the user with the given id.
      *

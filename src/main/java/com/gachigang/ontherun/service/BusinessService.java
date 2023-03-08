@@ -37,6 +37,8 @@ public class BusinessService {
             businessById.getOwners().addAll(userRepository.findAllByIdIn(businessRequest.getOwners()));
         }
         return businessRepository.save(businessById);
+    }
+
     @Transactional
     public void deleteBusinessById(@NonNull final Long id) {
         businessRepository.deleteBusinessById(id);
