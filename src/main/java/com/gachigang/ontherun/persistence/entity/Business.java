@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.Set;
 
+@Builder
 @Entity
 @Getter
 @Setter
@@ -21,4 +22,7 @@ public class Business {
 
     @ManyToMany(mappedBy = "businesses")
     Set<User> owners;
+
+    @OneToMany(mappedBy = "business")
+    private Set<Department> departments;
 }

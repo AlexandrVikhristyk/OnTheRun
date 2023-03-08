@@ -1,7 +1,7 @@
 package com.gachigang.ontherun.payload.user.request;
 
-import com.gachigang.ontherun.common.validator.PasswordMatches;
-import com.gachigang.ontherun.common.validator.ValidEmail;
+import com.gachigang.ontherun.common.validator.Password.PasswordMatches;
+import com.gachigang.ontherun.common.validator.Email.ValidEmail;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

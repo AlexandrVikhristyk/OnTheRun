@@ -1,6 +1,6 @@
 package com.gachigang.ontherun.persistence.entity;
 
-import com.gachigang.ontherun.common.validator.ValidEmail;
+import com.gachigang.ontherun.common.validator.Email.ValidEmail;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -56,7 +56,7 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities
                 = new ArrayList<>();
-        for (Role role: roles) {
+        for (Role role : roles) {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
             role.getPermissions().stream()
                     .map(p -> new SimpleGrantedAuthority(p.getName()))
@@ -74,6 +74,10 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(
                     name = "business_id", referencedColumnName = "id"))
     private Set<Business> businesses;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department department;
 
     @Override
     public String getPassword() {

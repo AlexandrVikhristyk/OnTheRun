@@ -8,6 +8,7 @@ import com.gachigang.ontherun.persistence.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,7 +20,6 @@ public class BusinessService {
     private final UserRepository userRepository;
 
     public List<Business> getAllBusiness() {
-
         return businessRepository.findAll();
     }
 
@@ -37,5 +37,15 @@ public class BusinessService {
             businessById.getOwners().addAll(userRepository.findAllByIdIn(businessRequest.getOwners()));
         }
         return businessRepository.save(businessById);
+    @Transactional
+    public void deleteBusinessById(@NonNull final Long id) {
+        businessRepository.deleteBusinessById(id);
+    }
+
+    public List<Business> findBusinessByOwners(User user) {
+        if (user.getBusinesses().isEmpty()) {
+            throw new RuntimeException("Not found Business for this user: " + user);
+        }
+        return businessRepository.findBusinessByOwners(user);
     }
 }
