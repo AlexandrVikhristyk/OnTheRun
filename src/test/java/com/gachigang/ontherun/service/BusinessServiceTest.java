@@ -10,12 +10,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -60,19 +57,25 @@ class BusinessServiceTest {
     @Test
     void testCreateBusiness(){
         User user = new User();
-        BusinessRequest businessRequest = BusinessRequest.builder()
+        final BusinessRequest businessRequest = BusinessRequest.builder()
                 .name("TestName")
                 .country("TestCountry")
                 .city("TestCity")
                 .build();
-        Business business = Business.builder()
+        final Business business = Business.builder()
                 .name(businessRequest.getName())
                 .country(businessRequest.getCountry())
                 .city(businessRequest.getCity())
+                .owners(Collections.singleton(user))
                 .build();
-        user.setBusinesses(Collections.singleton(business));
-        assertNotNull(business);
-        assertNotNull(user);
-        assertThat(Arrays.asList(business), hasItem(business));
+
+        when(businessRepository.save(business)).thenReturn(business);
+        Business result = businessService.createBusiness(businessRequest, user);
+
+
+        assertNotNull(result);
+        assertEquals(businessRequest.getName(), result.getName());
+        assertEquals(businessRequest.getCountry(), result.getCountry());
+        assertEquals(businessRequest.getCity(), result.getCity());
     }
 }

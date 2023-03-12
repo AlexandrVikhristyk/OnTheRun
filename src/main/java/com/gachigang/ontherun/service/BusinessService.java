@@ -32,11 +32,8 @@ public class BusinessService {
                 .name(businessRequest.getName())
                 .country(businessRequest.getCountry())
                 .city(businessRequest.getCity())
+                .owners(Collections.singleton(user))
                 .build();
-        user = User.builder()
-                .businesses(Collections.singleton(business))
-                .build();
-        business.setOwners(Collections.singleton(user));
         return businessRepository.save(business);
     }
 }
