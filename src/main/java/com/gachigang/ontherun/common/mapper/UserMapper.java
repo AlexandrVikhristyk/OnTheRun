@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 /**
  * This interface defines methods for mapping between the {@link User} and {@link UserDto} classes.
  */
-@Mapper(componentModel = "spring")
+@Mapper
 public interface UserMapper {
 
     /**
@@ -16,7 +16,7 @@ public interface UserMapper {
      * @param user The {@link User} object to be mapped.
      * @return The resulting {@link UserDto} object.
      */
-    UserDto userToUserDto(User user);
+    UserDto fromDto(User user);
 
     /**
      * Maps a {@link UserDto} object to a {@link User} object.
@@ -24,5 +24,5 @@ public interface UserMapper {
      * @param userDto The {@link UserDto} object to be mapped.
      * @return The resulting {@link User} object.
      */
-    User userDtoToUser(UserDto userDto);
+    User toDto(UserDto userDto);
 }
