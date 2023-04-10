@@ -1,5 +1,6 @@
 package com.gachigang.ontherun.service;
 
+import com.gachigang.ontherun.payload.user.request.BusinessRequest;
 import com.gachigang.ontherun.payload.user.request.UpdateBusinessRequest;
 import com.gachigang.ontherun.persistence.entity.Business;
 import com.gachigang.ontherun.persistence.entity.User;
@@ -35,7 +36,7 @@ class BusinessServiceTest {
         businessService.getAllBusiness();
         verify(businessRepository, times(1)).findAll();
     }
-    
+
     @Test
     void testGetBusinessByIdExists(){
         Business business = Business.builder()
@@ -155,5 +156,30 @@ class BusinessServiceTest {
         User user = new User();
         lenient().when(businessRepository.findBusinessByOwners(user)).thenReturn(Collections.emptyList());
         assertThrows(NullPointerException.class, () ->businessService.findBusinessByOwners(user));
+    }
+
+    @Test
+    void testCreateBusiness(){
+        User user = new User();
+        final BusinessRequest businessRequest = BusinessRequest.builder()
+                .name("TestName")
+                .country("TestCountry")
+                .city("TestCity")
+                .build();
+        final Business business = Business.builder()
+                .name(businessRequest.getName())
+                .country(businessRequest.getCountry())
+                .city(businessRequest.getCity())
+                .owners(Collections.singleton(user))
+                .build();
+
+        when(businessRepository.save(business)).thenReturn(business);
+        Business result = businessService.createBusiness(businessRequest, user);
+
+
+        assertNotNull(result);
+        assertEquals(businessRequest.getName(), result.getName());
+        assertEquals(businessRequest.getCountry(), result.getCountry());
+        assertEquals(businessRequest.getCity(), result.getCity());
     }
 }

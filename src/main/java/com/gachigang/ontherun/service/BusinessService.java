@@ -1,6 +1,7 @@
 package com.gachigang.ontherun.service;
 
 import com.gachigang.ontherun.payload.user.request.UpdateBusinessRequest;
+import com.gachigang.ontherun.payload.user.request.BusinessRequest;
 import com.gachigang.ontherun.persistence.entity.Business;
 import com.gachigang.ontherun.persistence.entity.User;
 import com.gachigang.ontherun.persistence.repository.BusinessRepository;
@@ -10,6 +11,7 @@ import lombok.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,5 +51,14 @@ public class BusinessService {
             throw new RuntimeException("Not found Business for this user: " + user);
         }
         return businessRepository.findBusinessByOwners(user);
+    }
+    public Business createBusiness(BusinessRequest businessRequest, User user){
+        Business business = Business.builder()
+                .name(businessRequest.getName())
+                .country(businessRequest.getCountry())
+                .city(businessRequest.getCity())
+                .owners(Collections.singleton(user))
+                .build();
+        return businessRepository.save(business);
     }
 }
