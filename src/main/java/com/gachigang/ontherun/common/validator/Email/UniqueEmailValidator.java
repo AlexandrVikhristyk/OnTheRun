@@ -1,12 +1,12 @@
 package com.gachigang.ontherun.common.validator.Email;
 
 import com.gachigang.ontherun.persistence.repository.UserRepository;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 
 /**
  * Class validate if the email address exists in the database.

@@ -1,10 +1,10 @@
 package com.gachigang.ontherun.common.validator.Password;
 
 import com.gachigang.ontherun.common.ApplicationConstants;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import lombok.NonNull;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 import java.util.regex.Matcher;
 
 /**

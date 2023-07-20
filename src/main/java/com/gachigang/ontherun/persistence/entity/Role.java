@@ -1,11 +1,11 @@
 package com.gachigang.ontherun.persistence.entity;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.util.Collection;
 
 @Data

@@ -4,6 +4,9 @@ import lombok.experimental.UtilityClass;
 
 import java.util.regex.Pattern;
 
+/**
+ * Contains various constants used in the messenger application.
+ */
 @UtilityClass
 public class ApplicationConstants {
     @UtilityClass
@@ -19,6 +22,5 @@ public class ApplicationConstants {
          */
         public static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z]).{8,20}$";
         public static final Pattern PASSWORD_PATTERN = Pattern.compile(Validation.PASSWORD_REGEX);
-
     }
 }
