@@ -1,16 +1,15 @@
 package com.gachigang.ontherun.payload.user.request;
 
-import com.gachigang.ontherun.common.validator.Password.PasswordMatches;
 import com.gachigang.ontherun.common.validator.Email.ValidEmail;
+import com.gachigang.ontherun.common.validator.Password.PasswordMatches;
+import com.gachigang.ontherun.common.validator.Password.ValidPassword;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 
 @Data
 @PasswordMatches
@@ -23,8 +22,7 @@ public class RegisterRequest {
     @ValidEmail
     private String email;
 
-    @NotEmpty(message = "Password is required")
-    @Size(min = 6)
+    @ValidPassword
     private String password;
     private String confirmPassword;
 }

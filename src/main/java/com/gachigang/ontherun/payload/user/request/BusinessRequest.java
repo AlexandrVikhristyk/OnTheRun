@@ -1,11 +1,10 @@
 package com.gachigang.ontherun.payload.user.request;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
-import javax.validation.constraints.NotEmpty;
 
-@Setter
-@Getter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

@@ -1,6 +1,7 @@
 package com.gachigang.ontherun.persistence.entity;
 
 import com.gachigang.ontherun.common.validator.Email.ValidEmail;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,8 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -38,7 +38,7 @@ public class User implements UserDetails {
     @ValidEmail
     private String email;
 
-    private LocalDate dateOfBirth;
+    private LocalDateTime dateOfBirth;
     private String country;
     private String city;
     private String password;
@@ -76,7 +76,7 @@ public class User implements UserDetails {
     private Set<Business> businesses;
 
     @ManyToOne
-    @JoinColumn(name = "department_id", nullable = false)
+    @JoinColumn(name = "department_id")
     private Department department;
 
     @Override

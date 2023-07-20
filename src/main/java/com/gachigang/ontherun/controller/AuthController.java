@@ -5,16 +5,18 @@ import com.gachigang.ontherun.payload.user.request.RegisterRequest;
 import com.gachigang.ontherun.payload.user.response.UserRegisterResponse;
 import com.gachigang.ontherun.persistence.entity.User;
 import com.gachigang.ontherun.service.AuthService;
-import lombok.AllArgsConstructor;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-
+/**
+ * REST controller for authentication requests (login & register)
+ */
 @CrossOrigin
 @RestController
 @RequestMapping("/auth")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;

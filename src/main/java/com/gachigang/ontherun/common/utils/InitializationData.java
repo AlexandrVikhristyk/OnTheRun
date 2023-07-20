@@ -1,6 +1,7 @@
 package com.gachigang.ontherun.common.utils;
 
 import com.gachigang.ontherun.common.enums.UserRole;
+import com.gachigang.ontherun.persistence.entity.Business;
 import com.gachigang.ontherun.persistence.entity.Role;
 import com.gachigang.ontherun.persistence.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +9,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-
+/**
+ * Class for initializing data in the DB
+ */
 @Component
 @RequiredArgsConstructor
 public class InitializationData implements CommandLineRunner {

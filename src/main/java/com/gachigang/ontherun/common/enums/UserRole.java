@@ -1,5 +1,8 @@
 package com.gachigang.ontherun.common.enums;
 
+/**
+ * Roles for the User class
+ */
 public enum UserRole {
     STAFF,
     MANAGER,

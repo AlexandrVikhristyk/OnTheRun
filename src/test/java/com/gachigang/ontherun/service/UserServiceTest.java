@@ -9,8 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +25,7 @@ public class UserServiceTest {
             .lastname("testlastname")
             .login("testLogin")
             .email("test@email.com")
-            .dateOfBirth(LocalDate.of(2002, 12, 2))
+            .dateOfBirth(LocalDateTime.now())
             .country("Ukraine")
             .city("Kyiv")
             .password("testpassword")

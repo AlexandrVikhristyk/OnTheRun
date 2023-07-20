@@ -19,4 +19,7 @@ public class ExceptionMessage {
 
     @Value("${bad.request.error.message}")
     private String badRequestErrorMessage;
+
+    @Value("${not.found.error.message}")
+    private String notFoundErrorMessage;
 }

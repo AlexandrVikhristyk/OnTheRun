@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * Class for response object of any Exception in our app.
@@ -13,8 +13,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class ErrorDetails {
+
     private Integer status;
-    private LocalDate timestamp;
+    private LocalDateTime timestamp;
     private String description;
     private String url;
 }

@@ -6,10 +6,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
- * Incoming DTO to represent {@link User}.
+ *  DTO class to represent {@link User}.
  */
 @Data
 @Builder
@@ -20,7 +20,7 @@ public class UserDto {
     private String lastname;
     private String login;
     private String email;
-    private LocalDate dateOfBirth;
+    private LocalDateTime dateOfBirth;
     private String country;
     private String city;
     private String password;
