@@ -9,6 +9,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -31,17 +32,15 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
      * Handle all other exceptions.
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleAllExceptions(
-            @NonNull final Exception exception,
-            @NonNull final HttpServletRequest request) {
+    public ResponseEntity<?> handleAllExceptions(Exception exception, HttpServletRequest request) {
         log.error("Exception was thrown due unknown exception:", exception);
 
-        final ResponseStatus responseStatus =
-                exception.getClass().getAnnotation(ResponseStatus.class);
-        final HttpStatus status =
-                responseStatus != null ? responseStatus.value() : HttpStatus.INTERNAL_SERVER_ERROR;
+         ResponseStatus responseStatus =
+           exception.getClass().getAnnotation(ResponseStatus.class);
+         HttpStatus status =
+           responseStatus != null ? responseStatus.value() : HttpStatus.INTERNAL_SERVER_ERROR;
 
-        final ErrorDetails message = ErrorDetails.builder()
+         ErrorDetails message = ErrorDetails.builder()
                 .status(status.value())
                 .timestamp(LocalDateTime.now())
                 .description(exceptionMessage.getUnauthorizedErrorMessage())
@@ -53,34 +52,40 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     /**
      * Handle Not found exception.
      */
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorDetails> handleNotFoundException(
-            @NonNull final HttpServletRequest request,
-            @NonNull final NotFoundException exception) {
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorDetails> handleNotFoundException(HttpServletRequest request,
+                                                                RuntimeException exception) {
+        ResponseStatus responseStatus =
+                exception.getClass().getAnnotation(ResponseStatus.class);
+        HttpStatus status =
+                responseStatus != null ? responseStatus.value() : HttpStatus.INTERNAL_SERVER_ERROR;
         log.error("Exception was thrown because resource was not found:", exception);
-        final var message = ErrorDetails.builder()
-                .status(HttpStatus.NOT_FOUND.value())
+        ErrorDetails message = ErrorDetails.builder()
+                .status(status.value())
                 .timestamp(LocalDateTime.now())
                 .description(exceptionMessage.getNotFoundErrorMessage())
                 .url(request.getRequestURL().toString())
                 .build();
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+        return ResponseEntity.status(status.value()).body(message);
     }
 
     /**
      * Handle ConstraintViolationException.
      */
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorDetails> handleResourceNotFoundException(
-            @NonNull final HttpServletRequest request,
-            @NonNull final Exception exception) {
+    public ResponseEntity<ErrorDetails> handleResourceNotFoundException(HttpServletRequest request,
+                                                                        Exception exception) {
+        ResponseStatus responseStatus =
+                exception.getClass().getAnnotation(ResponseStatus.class);
+        HttpStatus status =
+                responseStatus != null ? responseStatus.value() : HttpStatus.INTERNAL_SERVER_ERROR;
         log.error("Exception was thrown because passed data was not valid:", exception);
-        final var message = ErrorDetails.builder()
-                .status(HttpStatus.NOT_FOUND.value())
+        ErrorDetails message = ErrorDetails.builder()
+                .status(status.value())
                 .timestamp(LocalDateTime.now())
                 .description(exceptionMessage.getNotFoundErrorMessage())
                 .url(request.getRequestURL().toString())
                 .build();
-        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(status.value()).body(message);
     }
 }
