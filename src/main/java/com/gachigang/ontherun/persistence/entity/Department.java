@@ -2,11 +2,12 @@ package com.gachigang.ontherun.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Set;
-
+@Builder
 @Entity
 @Data
 @AllArgsConstructor
@@ -21,7 +22,7 @@ public class Department {
     @OneToMany(mappedBy = "department")
     private Set<User> users;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "business_id")
     private Business business;
 }
