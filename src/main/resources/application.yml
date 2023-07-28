@@ -8,7 +8,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: 'postgres'
     password: 'root'
-    url: jdbc:postgresql://localhost:5432/ontherun
+    url: jdbc:postgresql://host.docker.internal:5432/ontherun
   jpa:
     hibernate:
       ddl-auto: create-drop
