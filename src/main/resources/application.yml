@@ -6,8 +6,8 @@ spring:
     name: ontherun
   datasource:
     driver-class-name: org.postgresql.Driver
-    username: 'postgres'
-    password: 'root'
+    username: ${POSTGRES_NAME}
+    password: ${POSTGRES_PASS}
     url: jdbc:postgresql://localhost:5432/ontherun
   jpa:
     hibernate:
