@@ -8,12 +8,12 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: 'postgres'
     password: 'root'
-    url: jdbc:postgresql://host.docker.internal:5432/ontherun
+    url: jdbc:postgresql://postgres:5432/ontherun
   jpa:
     hibernate:
       ddl-auto: create-drop
-    properties:
-      hibernate:
-        dealect: org.hibernate.dealect.PostgreSQLDialect
-        format_sql: 'true'
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+          format_sql: 'true'
     show-sql: 'true'

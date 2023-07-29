@@ -9,7 +9,7 @@ services:
     image: postgres
     container_name: postgres
     ports:
-      - '5432:5432'
+      - 5432:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
@@ -21,15 +21,12 @@ services:
 
 
   webapp:
+    container_name: ontherun
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - '8080:8080'
-    environment:
-      POSTGRES_USER: 'postgres'
-      POSTGRES_PASSWORD: 'root'
-      POSTGRES_DB: 'ontherun'
+      - 8080:8080
     depends_on:
       - postgres
     networks: [ontherun_network]
