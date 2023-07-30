@@ -1,9 +1,5 @@
 version: '2.1'
 
-networks:
-  ontherun_network:
-    driver: bridge
-
 services:
   postgres:
     image: postgres
@@ -34,3 +30,6 @@ services:
 volumes:
   postgres:
 
+networks:
+  ontherun_network:
+    driver: bridge
