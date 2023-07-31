@@ -12,3 +12,21 @@
 7. **In the "Environment Variables"** window, click the **"+"** button in the top right corner.
 8. **Enter the name and value** of the environment variable, and then click **"OK"**.
 9. **Press "Apply"** and then **"OK"** to save the configuration.
+
+
+## Build
+
+---
+```bash
+./mvnw clean install
+./mvnw compile
+```
+
+---
+## Profiles
+```bash
+./mvnw clean install 
+```
+>[Spring Profiles](https://www.baeldung.com/spring-profiles)
+*-Spring Profiles provide a way to segregate parts of your application configuration and make it only available in certain environments.*
+---
