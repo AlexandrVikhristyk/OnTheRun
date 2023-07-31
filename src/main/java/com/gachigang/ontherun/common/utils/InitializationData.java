@@ -35,20 +35,19 @@ public class InitializationData implements CommandLineRunner {
             }
         }
 
+
         for (int i = 0; i < 3; i++) {
-            Business business0  = Business.builder()
+            Business business  = Business.builder()
                     .city("Kiev" + i)
                     .country("Ukraine")
                     .name("Test"+i)
                     .build();
-            businessRepository.save(business0);
-        }
+            businessRepository.save(business);
 
-        for (int i = 0; i < 3; i++) {
-            Department department0 = Department.builder()
-                    .business(Business.builder().build())
+            Department department = Department.builder()
+                    .business(business)
                     .build();
-            departmentRepository.save(department0);
+            departmentRepository.save(department);
         }
     }
 }

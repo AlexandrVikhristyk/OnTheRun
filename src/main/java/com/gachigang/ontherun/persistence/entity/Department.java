@@ -22,7 +22,7 @@ public class Department {
     @OneToMany(mappedBy = "department")
     private Set<User> users;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne
     @JoinColumn(name = "business_id")
     private Business business;
 }
