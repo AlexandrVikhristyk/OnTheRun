@@ -10,11 +10,10 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: root
       POSTGRES_DB: ontherun
-    networks: [ontherun_network]
+    networks: [ontherun-network]
     volumes:
       - postgres:/data/postgres
     restart: always
-
 
   webapp:
     container_name: ontherun
@@ -25,11 +24,12 @@ services:
       - 8080:8080
     depends_on:
       - postgres
-    networks: [ontherun_network]
+    networks: [ontherun-network]
 
 volumes:
   postgres:
 
 networks:
-  ontherun_network:
+  ontherun-network:
     driver: bridge
+    name: ontherun-network

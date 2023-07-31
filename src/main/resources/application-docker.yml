@@ -1,0 +1,7 @@
+spring:
+  #Database settings
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: 'postgres'
+    password: 'root'
+    url: jdbc:postgresql://postgres:5432/ontherun
