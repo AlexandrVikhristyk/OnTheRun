@@ -19,6 +19,7 @@ public class BaseSecurityConfig {
 
     private final AuthenticationProvider authenticationProvider;
     private final AuthenticationEntryPointImpl authenticationEntryPoint;
+
     /**
      * Configuration of security.
      */
@@ -30,6 +31,7 @@ public class BaseSecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/businesses/*").permitAll()
                         .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider)
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint));
