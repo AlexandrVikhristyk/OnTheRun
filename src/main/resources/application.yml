@@ -1,19 +1,21 @@
+###
+# Spring settings
+###
+spring:
+  #Jpa settings
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: 'true'
+    hibernate:
+      ddl-auto: create-drop
+      properties:
+          format_sql: 'true'
+
+#Application settings
+application:
+  name: ontherun
+
+#Server settings
 server:
   port: 8080
 
-spring:
-  application:
-    name: ontherun
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    username: ${POSTGRES_NAME}
-    password: ${POSTGRES_PASS}
-    url: jdbc:postgresql://localhost:5432/ontherun
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: 'true'
-    show-sql: 'true'

@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="docker_environment" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" folderName="Enviroments">
+    <envs>
+      <env name="POSTGRES_PASS" value="root" />
+      <env name="POSTGRES_NAME" value="postgres" />
+    </envs>
+    <module name="ontherun" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.gachigang.ontherun.OntherunApplication" />
+    <option name="VM_PARAMETERS" value="-Dspring.profiles.active=docker" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

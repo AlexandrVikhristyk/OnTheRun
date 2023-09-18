@@ -1,0 +1,35 @@
+version: '2.1'
+
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: ontherun
+    networks: [ontherun-network]
+    volumes:
+      - postgres:/data/postgres
+    restart: always
+
+  webapp:
+    container_name: ontherun
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+    networks: [ontherun-network]
+
+volumes:
+  postgres:
+
+networks:
+  ontherun-network:
+    driver: bridge
+    name: ontherun-network
