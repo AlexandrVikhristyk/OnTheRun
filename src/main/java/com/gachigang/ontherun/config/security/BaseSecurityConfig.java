@@ -8,6 +8,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.server.authentication.logout.DelegatingServerLogoutHandler;
+import org.springframework.security.web.server.authentication.logout.SecurityContextServerLogoutHandler;
+import org.springframework.security.web.server.authentication.logout.WebSessionServerLogoutHandler;
 
 /**
  * Security configuration class.
@@ -25,6 +28,10 @@ public class BaseSecurityConfig {
      */
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
+        DelegatingServerLogoutHandler logoutHandler = new DelegatingServerLogoutHandler(
+                new WebSessionServerLogoutHandler(), new SecurityContextServerLogoutHandler()
+        );
+
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
