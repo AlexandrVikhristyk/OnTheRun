@@ -8,8 +8,9 @@ spring:
     show-sql: 'true'
     hibernate:
       ddl-auto: create-drop
-      properties:
-          format_sql: 'true'
+    properties:
+      hibernate.format_sql: true
+
 
 #Application settings
 application:
