@@ -28,18 +28,14 @@ public class BaseSecurityConfig {
      */
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
-        DelegatingServerLogoutHandler logoutHandler = new DelegatingServerLogoutHandler(
-                new WebSessionServerLogoutHandler(), new SecurityContextServerLogoutHandler()
-        );
 
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/businesses/*").permitAll()
-                        .anyRequest().authenticated())
+//                .authorizeHttpRequests((authorize) -> authorize
+//                        .requestMatchers("/auth/**").permitAll()
+//                        .anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider)
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint));
 
