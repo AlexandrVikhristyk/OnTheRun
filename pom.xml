@@ -23,6 +23,7 @@
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
         <lombok.version>1.18.24</lombok.version>
         <hibernate-envers.version>6.2.6.Final</hibernate-envers.version>
+        <spring-security-core>6.1.2</spring-security-core>
     </properties>
 
     <dependencyManagement>
@@ -110,7 +111,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <version>6.1.2</version>
+            <version>${spring-security-core}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
