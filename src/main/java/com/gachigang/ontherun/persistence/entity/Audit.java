@@ -8,6 +8,12 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+/**
+ * An abstract base class for entities that require auditing of some actions.
+ * Extending this class automatically tracks information.
+ *
+ * @see AuditingEntityListener
+ */
 @Audited
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
