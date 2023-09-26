@@ -1,22 +1,22 @@
 package com.gachigang.ontherun.persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.envers.Audited;
-import org.hibernate.envers.NotAudited;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
 /**
  * Business class represents a business in the db.
  */
-@Audited
 @Builder
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Business extends Audit {
+public class Business {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,6 @@ public class Business extends Audit {
     @ManyToMany(mappedBy = "businesses")
     Set<User> owners;
 
-    @NotAudited
     @OneToMany(mappedBy = "business")
     private Set<Department> departments;
 }
