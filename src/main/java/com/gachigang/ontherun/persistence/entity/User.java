@@ -69,6 +69,7 @@ public class User extends Audit implements UserDetails {
         return authorities;
     }
 
+    @NotAudited
     @ManyToMany
     @JoinTable(
             name = "users_business",
@@ -78,6 +79,7 @@ public class User extends Audit implements UserDetails {
                     name = "business_id", referencedColumnName = "id"))
     private Set<Business> businesses;
 
+    @NotAudited
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
