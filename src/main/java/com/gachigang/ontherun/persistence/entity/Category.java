@@ -9,6 +9,11 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * Represents a category of products in the application.
+ * Each category can contain multiple related products.
+ * This class is an entity mapped to the "categories" table in the DB
+ */
 @Entity
 @Data
 @AllArgsConstructor

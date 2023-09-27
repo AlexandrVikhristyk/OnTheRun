@@ -57,7 +57,7 @@ public class InitializationData implements CommandLineRunner {
         for (CategoryName categoryName : CategoryName.values()) {
             Category category = Category.builder()
                     .name(categoryName)
-                    .description("Description for " + categoryName.getDisplayName())
+                    .description("Description for " + categoryName)
                     .build();
 
             categoryRepository.save(category);
