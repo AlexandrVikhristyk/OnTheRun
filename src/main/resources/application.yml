@@ -1,19 +1,32 @@
-server:
-  port: 8080
-
+###
+# Spring settings
+###
 spring:
-  application:
-    name: ontherun
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    username: 'postgres'
-    password: 'root'
-    url: jdbc:postgresql://localhost:5432/ontherun
+  #Jpa settings
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: 'true'
     hibernate:
       ddl-auto: create-drop
     properties:
       hibernate:
-        dealect: org.hibernate.dealect.PostgreSQLDialect
-        format_sql: 'true'
-    show-sql: 'true'
+        format_sql: true
+      org:
+        hibernate:
+          # Envers settings
+          envers:
+            audit_table_suffix: '_history'
+            revision_field_name: 'history_info_id'
+            revision_type_field_name: 'type'
+
+
+
+
+#Application settings
+application:
+  name: ontherun
+
+#Server settings
+server:
+  port: 8080
+
