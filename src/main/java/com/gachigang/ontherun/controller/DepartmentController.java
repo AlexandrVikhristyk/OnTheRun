@@ -24,7 +24,7 @@ public class DepartmentController {
      * @throws {@link NotFoundException} if user with id was not found,
      * or {@link RuntimeException} if there is no department for this user
      */
-    @GetMapping("/owing")
+    @GetMapping("/owning")
     public Department getDepartmentByUserId(@AuthenticationPrincipal User user) {
         return departmentService.getDepartmentByUserId(user.getId());
     }
