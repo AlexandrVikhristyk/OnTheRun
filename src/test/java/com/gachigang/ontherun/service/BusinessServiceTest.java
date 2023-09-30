@@ -1,7 +1,7 @@
 package com.gachigang.ontherun.service;
 
-import com.gachigang.ontherun.payload.user.request.BusinessRequest;
-import com.gachigang.ontherun.payload.user.request.UpdateBusinessRequest;
+import com.gachigang.ontherun.payload.business.request.BusinessRequest;
+import com.gachigang.ontherun.payload.business.request.UpdateBusinessRequest;
 import com.gachigang.ontherun.persistence.entity.Business;
 import com.gachigang.ontherun.persistence.entity.User;
 import com.gachigang.ontherun.persistence.repository.BusinessRepository;

@@ -1,4 +1,4 @@
-package com.gachigang.ontherun.payload.user.request;
+package com.gachigang.ontherun.payload.business.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

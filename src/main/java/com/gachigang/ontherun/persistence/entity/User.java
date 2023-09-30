@@ -46,6 +46,25 @@ public class User extends Audit implements UserDetails {
     private String password;
 
     @NotAudited
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
+
+    @NotAudited
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
+
+    @NotAudited
+    @ManyToMany
+    @JoinTable(
+            name = "users_business",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "business_id", referencedColumnName = "id"))
+    private Set<Business> businesses;
+
+    @NotAudited
     @ManyToMany
     @JoinTable(
             name = "users_role",
@@ -68,21 +87,6 @@ public class User extends Audit implements UserDetails {
 
         return authorities;
     }
-
-    @NotAudited
-    @ManyToMany
-    @JoinTable(
-            name = "users_business",
-            joinColumns = @JoinColumn(
-                    name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "business_id", referencedColumnName = "id"))
-    private Set<Business> businesses;
-
-    @NotAudited
-    @ManyToOne
-    @JoinColumn(name = "department_id")
-    private Department department;
 
     @Override
     public String getPassword() {
