@@ -39,14 +39,14 @@ public class BaseSecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated())
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint))
                 .logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer
                         .logoutUrl("/auth/logout")
                         .addLogoutHandler(logoutHandler)
                         .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
-                        .permitAll())
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint));
+                        .permitAll());
 
         return http.build();
     }
