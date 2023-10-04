@@ -2,12 +2,15 @@ package com.gachigang.ontherun.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gachigang.ontherun.common.enums.TokenType;
+import com.gachigang.ontherun.common.enums.UserRole;
 import com.gachigang.ontherun.common.exception.AccountDisabledException;
 import com.gachigang.ontherun.payload.user.request.LoginRequest;
 import com.gachigang.ontherun.payload.user.request.RegisterRequest;
 import com.gachigang.ontherun.payload.user.response.AuthenticationResponse;
+import com.gachigang.ontherun.persistence.entity.Role;
 import com.gachigang.ontherun.persistence.entity.Token;
 import com.gachigang.ontherun.persistence.entity.User;
+import com.gachigang.ontherun.persistence.repository.RoleRepository;
 import com.gachigang.ontherun.persistence.repository.TokenRepository;
 import com.gachigang.ontherun.persistence.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,6 +37,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     public void authenticateUser(LoginRequest loginRequest) {
         User user = userService.getByEmail(loginRequest.getEmail());
@@ -52,15 +56,18 @@ public class AuthService {
     }
 
     public AuthenticationResponse register(RegisterRequest registerRequest) {
+        Role role = roleRepository.findById(registerRequest.getRoleId())
+                .orElse(roleRepository.findByName(UserRole.USER.getRole()));
+
         User user = User.builder()
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
-                .roles(Collections.singleton(registerRequest.getRole()))
+                .roles(Collections.singleton(role))
                 .build();
 
-        var savedUser = userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
+        User savedUser = userRepository.save(user);
+        String jwtToken = jwtService.generateToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(savedUser, jwtToken);
 
         return AuthenticationResponse.builder()

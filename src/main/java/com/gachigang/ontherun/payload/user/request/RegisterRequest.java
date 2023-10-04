@@ -3,7 +3,6 @@ package com.gachigang.ontherun.payload.user.request;
 import com.gachigang.ontherun.common.validator.Email.ValidEmail;
 import com.gachigang.ontherun.common.validator.Password.PasswordMatches;
 import com.gachigang.ontherun.common.validator.Password.ValidPassword;
-import com.gachigang.ontherun.persistence.entity.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -26,6 +25,5 @@ public class RegisterRequest {
     @ValidPassword
     private String password;
     private String confirmPassword;
-
-    private Role role;
+    private Long roleId;
 }
