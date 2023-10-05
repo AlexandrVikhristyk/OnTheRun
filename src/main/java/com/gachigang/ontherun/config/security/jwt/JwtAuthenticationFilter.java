@@ -23,6 +23,12 @@ import java.io.IOException;
 import static com.gachigang.ontherun.common.ApplicationConstants.Security.AUTH;
 import static com.gachigang.ontherun.common.ApplicationConstants.Security.TOKEN_PREFIX;
 
+/**
+ * A filter for authenticating clients using JWT tokens.
+ * This filter checks the validity of JWT tokens in the request header.
+ *
+ * @see OncePerRequestFilter
+ */
 @Component
 @RequiredArgsConstructor
 @Slf4j
