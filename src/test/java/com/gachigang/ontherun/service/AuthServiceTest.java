@@ -3,8 +3,13 @@ package com.gachigang.ontherun.service;
 import com.gachigang.ontherun.common.enums.UserRole;
 import com.gachigang.ontherun.payload.user.request.LoginRequest;
 import com.gachigang.ontherun.payload.user.request.RegisterRequest;
+import com.gachigang.ontherun.payload.user.response.AuthenticationResponse;
 import com.gachigang.ontherun.persistence.entity.Role;
+import com.gachigang.ontherun.persistence.entity.Token;
 import com.gachigang.ontherun.persistence.entity.User;
+import com.gachigang.ontherun.persistence.repository.RoleRepository;
+import com.gachigang.ontherun.persistence.repository.TokenRepository;
+import com.gachigang.ontherun.persistence.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -16,7 +21,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collections;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -24,8 +31,12 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class AuthServiceTest {
 
-    private final String EMAIL = "test@gmail.com";
-    private final String PASSWORD = "password";
+    private static final String EMAIL = "test@gmail.com";
+    private static final String PASSWORD = "Password123";
+    private static final Role ROLE = Role.builder()
+            .name(UserRole.USER.getRole())
+            .permissions(Collections.EMPTY_LIST)
+            .build();
 
     @Mock
     private PasswordEncoder encoder;
@@ -33,17 +44,22 @@ public class AuthServiceTest {
     private AuthenticationManager authenticationManager;
     @Mock
     private UserService userService;
+    @Mock
+    private JwtService jwtService;
+    @Mock
+    private TokenRepository tokenRepository;
+    @Mock
+    private UserRepository userRepository;
+    @Mock
+    private RoleRepository roleRepository;
 
     @InjectMocks
     private AuthService authService;
 
+
+
     @Test
     public void testAuthenticateUser_Positive() {
-        Role role = Role.builder()
-                .name(UserRole.USER.getRole())
-                .permissions(Collections.EMPTY_LIST)
-                .build();
-
         LoginRequest loginRequest = LoginRequest.builder()
                 .email(EMAIL)
                 .password(PASSWORD)
@@ -52,7 +68,7 @@ public class AuthServiceTest {
         User user = User.builder()
                 .email(EMAIL)
                 .password(PASSWORD)
-                .roles(Collections.singleton(role))
+                .roles(Collections.singleton(ROLE))
                 .build();
 
         when(userService.getByEmail(EMAIL)).thenReturn(user);
@@ -68,11 +84,6 @@ public class AuthServiceTest {
 
     @Test
     public void testAuthenticateUser_Negative() {
-        Role role = Role.builder()
-                .name(UserRole.USER.getRole())
-                .permissions(Collections.EMPTY_LIST)
-                .build();
-
         LoginRequest loginRequest = LoginRequest.builder()
                 .email(EMAIL)
                 .password(PASSWORD + "_wrong")
@@ -81,7 +92,7 @@ public class AuthServiceTest {
         User user = User.builder()
                 .email(EMAIL)
                 .password(PASSWORD)
-                .roles(Collections.singleton(role))
+                .roles(Collections.singleton(ROLE))
                 .build();
 
         when(userService.getByEmail(EMAIL)).thenReturn(user);
@@ -97,26 +108,56 @@ public class AuthServiceTest {
                 .email(EMAIL)
                 .password(PASSWORD)
                 .confirmPassword(PASSWORD)
+                .roleId(1L)
                 .build();
 
-        authService.register(registerRequest);
+        when(roleRepository.findById(1L)).thenReturn(Optional.of(ROLE));
 
-        verify(encoder).encode(any());
-        verify(userService).save(any());
+        AuthenticationResponse expectedResponse = AuthenticationResponse.builder()
+                .accessToken("sampleAccessToken")
+                .refreshToken("sampleRefreshToken")
+                .build();
+
+        User savedUser = User.builder()
+                .email(EMAIL)
+                .password(PASSWORD)
+                .roles(Collections.singleton(ROLE))
+                .build();
+
+        when(userRepository.save(any(User.class))).thenReturn(savedUser);
+        when(jwtService.generateToken(any(User.class))).thenReturn("sampleAccessToken");
+        when(jwtService.generateRefreshToken(any(User.class))).thenReturn("sampleRefreshToken");
+
+        AuthenticationResponse response = authService.register(registerRequest);
+
+        verify(userRepository, times(1)).save(any(User.class));
+        verify(jwtService, times(1)).generateToken(any(User.class));
+        verify(jwtService, times(1)).generateRefreshToken(any(User.class));
+        verify(tokenRepository, times(1)).save(any(Token.class));
+
+        assertEquals(expectedResponse, response);
     }
 
+
     @Test
-    public void testUserRegister_Negative() {
+    public void testRegister_Negative() {
         RegisterRequest registerRequest = RegisterRequest.builder()
                 .email(EMAIL)
                 .password(PASSWORD)
-                .confirmPassword(PASSWORD)
+                .roleId(1L)
                 .build();
 
-        doThrow(new RuntimeException("Database connection failed")).when(userService).save(any());
-        assertThrows(RuntimeException.class, () -> authService.register(registerRequest));
+        when(roleRepository.findById(1L)).thenReturn(Optional.of(ROLE));
 
-        verify(encoder).encode(any());
-        verify(userService).save(any());
+        when(userRepository.save(any(User.class))).thenThrow(new RuntimeException("Failed to save user"));
+
+        assertThrows(RuntimeException.class, () -> {
+            authService.register(registerRequest);
+        });
+
+        verify(userRepository, times(1)).save(any(User.class));
+        verify(jwtService, never()).generateToken(any(User.class));
+        verify(jwtService, never()).generateRefreshToken(any(User.class));
+        verify(tokenRepository, never()).save(any(Token.class));
     }
 }

@@ -27,5 +27,6 @@ public class ApplicationConstants {
     @UtilityClass
     public class Security {
         public static final String TOKEN_PREFIX = "Bearer ";
+        public static final String AUTH = "auth";
     }
 }
