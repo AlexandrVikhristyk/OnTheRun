@@ -1,11 +1,10 @@
 package com.gachigang.ontherun.controller;
 
-import com.gachigang.ontherun.payload.user.request.BusinessRequest;
-import com.gachigang.ontherun.payload.user.request.UpdateBusinessRequest;
+import com.gachigang.ontherun.payload.business.request.BusinessRequest;
+import com.gachigang.ontherun.payload.business.request.UpdateBusinessRequest;
 import com.gachigang.ontherun.persistence.entity.Business;
 import com.gachigang.ontherun.persistence.entity.User;
 import com.gachigang.ontherun.service.BusinessService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

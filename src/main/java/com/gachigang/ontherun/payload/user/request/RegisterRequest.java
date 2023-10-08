@@ -25,4 +25,5 @@ public class RegisterRequest {
     @ValidPassword
     private String password;
     private String confirmPassword;
+    private Long roleId;
 }

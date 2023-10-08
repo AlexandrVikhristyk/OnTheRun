@@ -39,7 +39,6 @@ public class InitializationData implements CommandLineRunner {
             }
         }
 
-
         for (int i = 0; i < 3; i++) {
             Business business  = Business.builder()
                     .city("Kiev" + i)

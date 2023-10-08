@@ -23,4 +23,10 @@ public class ApplicationConstants {
         public static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z]).{8,20}$";
         public static final Pattern PASSWORD_PATTERN = Pattern.compile(Validation.PASSWORD_REGEX);
     }
+
+    @UtilityClass
+    public class Security {
+        public static final String TOKEN_PREFIX = "Bearer ";
+        public static final String AUTH = "auth";
+    }
 }
