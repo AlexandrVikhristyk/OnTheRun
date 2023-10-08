@@ -74,7 +74,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         } else {
-            log.error("Access token has expired or is revoked");
+            log.error("Access token has expired or revoked");
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
         filterChain.doFilter(request, response);
