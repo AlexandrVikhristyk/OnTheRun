@@ -2,10 +2,7 @@ package com.gachigang.ontherun.persistence.entity;
 
 import com.gachigang.ontherun.common.validator.Email.ValidEmail;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,6 +23,8 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = {"tokens", "department", "businesses", "roles"})
+@EqualsAndHashCode(exclude =  {"tokens", "department", "businesses", "roles"}, callSuper = false)
 @Data
 @Table(name = "userInfo")
 public class User extends Audit implements UserDetails {
@@ -50,12 +49,12 @@ public class User extends Audit implements UserDetails {
     private List<Token> tokens;
 
     @NotAudited
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
     private Department department;
 
     @NotAudited
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_business",
             joinColumns = @JoinColumn(
@@ -65,7 +64,7 @@ public class User extends Audit implements UserDetails {
     private Set<Business> businesses;
 
     @NotAudited
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_role",
             joinColumns = @JoinColumn(

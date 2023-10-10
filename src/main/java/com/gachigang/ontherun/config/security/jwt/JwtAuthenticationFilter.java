@@ -66,7 +66,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
-                        userDetails.getAuthorities()
+                        null //TODO: We need to open transaction or set Eager fetch type for roles -- Needs to be fixed in story about roles
                 );
                 authToken.setDetails(
                         new WebAuthenticationDetailsSource().buildDetails(request)

@@ -52,6 +52,7 @@ public class BusinessService {
         }
         return businessRepository.findBusinessByOwners(user);
     }
+    @Transactional
     public Business createBusiness(BusinessRequest businessRequest, User user){
         Business business = Business.builder()
                 .name(businessRequest.getName())
