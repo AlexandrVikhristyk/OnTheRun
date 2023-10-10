@@ -28,5 +28,7 @@ public class ApplicationConstants {
     public class Security {
         public static final String TOKEN_PREFIX = "Bearer ";
         public static final String AUTH = "auth";
+        public static final String[] ALLOWEDORIGINS = {"https://ontherun.com"};
+        public static final String[] ALLOWEDMETHODS = {"GET","POST"};
     }
 }

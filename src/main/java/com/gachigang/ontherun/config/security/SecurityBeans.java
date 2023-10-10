@@ -12,6 +12,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+
+import static com.gachigang.ontherun.common.ApplicationConstants.Security.ALLOWEDMETHODS;
+import static com.gachigang.ontherun.common.ApplicationConstants.Security.ALLOWEDORIGINS;
 
 @Configuration
 @RequiredArgsConstructor
@@ -42,5 +50,15 @@ public class SecurityBeans {
     @Bean
     PasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList(ALLOWEDORIGINS));
+        configuration.setAllowedMethods(Arrays.asList(ALLOWEDMETHODS));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
