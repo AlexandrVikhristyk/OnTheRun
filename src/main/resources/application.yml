@@ -30,9 +30,10 @@ spring:
 
 #Application settings
 application:
-  name: ontherun
+  front:
+    url: localhost:4000
+
 
 #Server settings
 server:
   port: 8080
-
