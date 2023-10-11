@@ -2,9 +2,9 @@ package com.gachigang.ontherun.config.security;
 
 import com.gachigang.ontherun.persistence.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -24,8 +24,9 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class SecurityBeans {
 
+    @Value("${application.front.url}")
+    private String corsOrigins;
     private final UserRepository userRepository;
-    private final Environment environment;
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -56,7 +57,7 @@ public class SecurityBeans {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        configuration.setAllowedOrigins(List.of(Objects.requireNonNull(environment.getProperty("application.front.url"))));
+        configuration.setAllowedOrigins(List.of(Objects.requireNonNull(corsOrigins)));
         configuration.setAllowedMethods(List.of("POST", "GET"));
         configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
         source.registerCorsConfiguration("/**", configuration);
