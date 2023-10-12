@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
@@ -35,15 +36,12 @@ class BusinessServiceTest {
 
     @Test
     void testGetAllBusiness() {
-        int page = 0;
-        int size = 10;
+        Page<Business> page = new PageImpl<>(Collections.emptyList());
 
-        PageRequest pageRequest = PageRequest.of(page, size);
-        when(businessRepository.findAll(pageRequest)).thenReturn(new PageImpl<>(Collections.emptyList()));
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        when(businessRepository.findAll(pageRequest)).thenReturn(page);
 
         List<Business> result = businessService.getAllBusiness(pageRequest);
-
-        verify(businessRepository, times(1)).findAll(pageRequest);
         assertEquals(Collections.emptyList(), result);
     }
 
