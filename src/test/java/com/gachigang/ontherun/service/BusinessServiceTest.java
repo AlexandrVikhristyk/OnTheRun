@@ -11,6 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,12 +35,20 @@ class BusinessServiceTest {
 
     @Test
     void testGetAllBusiness() {
-        businessService.getAllBusiness();
-        verify(businessRepository, times(1)).findAll();
+        int page = 0;
+        int size = 10;
+
+        PageRequest pageRequest = PageRequest.of(page, size);
+        when(businessRepository.findAll(pageRequest)).thenReturn(new PageImpl<>(Collections.emptyList()));
+
+        List<Business> result = businessService.getAllBusiness(pageRequest);
+
+        verify(businessRepository, times(1)).findAll(pageRequest);
+        assertEquals(Collections.emptyList(), result);
     }
 
     @Test
-    void testGetBusinessByIdExists(){
+    void testGetBusinessByIdExists() {
         Business business = Business.builder()
                 .id(VALID_ID)
                 .city("Kyiv")
@@ -53,13 +63,13 @@ class BusinessServiceTest {
     }
 
     @Test
-    void testGetBusinessByIdNotExists(){
+    void testGetBusinessByIdNotExists() {
         when(businessRepository.findById(INVALID_ID)).thenReturn(Optional.empty());
         assertThrows(IllegalArgumentException.class, () -> businessService.getBusinessById(INVALID_ID));
     }
 
     @Test
-    void testUpdateBusinessWithoutChangedOwners(){
+    void testUpdateBusinessWithoutChangedOwners() {
         UpdateBusinessRequest updateBusinessRequest = new UpdateBusinessRequest(
                 "Boba",
                 "Ukraine",
@@ -88,13 +98,13 @@ class BusinessServiceTest {
         assertEquals(updateBusinessRequest.getCity(), result.getCity());
         assertEquals(updateBusinessRequest.getOwners(),
                 result.getOwners()
-                .stream()
-                .map(User::getId)
-                .collect(Collectors.toSet()));
+                        .stream()
+                        .map(User::getId)
+                        .collect(Collectors.toSet()));
     }
 
     @Test
-    void testUpdateBusinessWithChangedOwners(){
+    void testUpdateBusinessWithChangedOwners() {
         UpdateBusinessRequest updateBusinessRequest = new UpdateBusinessRequest(
                 "Boba",
                 "Ukraine",
@@ -151,15 +161,16 @@ class BusinessServiceTest {
         List<Business> result = businessService.findBusinessByOwners(user);
         assertNotNull(result);
     }
+
     @Test
-    void testFindBusinessByOwners_Negative(){
+    void testFindBusinessByOwners_Negative() {
         User user = new User();
         lenient().when(businessRepository.findBusinessByOwners(user)).thenReturn(Collections.emptyList());
-        assertThrows(NullPointerException.class, () ->businessService.findBusinessByOwners(user));
+        assertThrows(NullPointerException.class, () -> businessService.findBusinessByOwners(user));
     }
 
     @Test
-    void testCreateBusiness(){
+    void testCreateBusiness() {
         User user = new User();
         final BusinessRequest businessRequest = BusinessRequest.builder()
                 .name("TestName")
