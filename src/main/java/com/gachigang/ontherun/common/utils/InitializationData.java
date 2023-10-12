@@ -39,11 +39,11 @@ public class InitializationData implements CommandLineRunner {
             }
         }
 
-        for (int i = 0; i < 3; i++) {
-            Business business  = Business.builder()
+        for (int i = 0; i < 10; i++) {
+            Business business = Business.builder()
                     .city("Kiev" + i)
                     .country("Ukraine")
-                    .name("Test"+i)
+                    .name("Test" + i)
                     .build();
             businessRepository.save(business);
 

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -22,8 +23,10 @@ class BusinessControllerTest {
 
     @Test
     void testGetAllBusiness() {
-        businessController.getAllBusiness();
-        verify(businessService, times(1)).getAllBusiness();
+        int page = 0;
+        int size = 10;
+        businessController.getAllBusiness(0,10);
+        verify(businessService, times(1)).getAllBusiness(PageRequest.of(page, size));
     }
 
     @Test

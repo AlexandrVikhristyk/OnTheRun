@@ -8,6 +8,8 @@ import com.gachigang.ontherun.persistence.repository.BusinessRepository;
 import com.gachigang.ontherun.persistence.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +23,9 @@ public class BusinessService {
     private final BusinessRepository businessRepository;
     private final UserRepository userRepository;
 
-    public List<Business> getAllBusiness() {
-        return businessRepository.findAll();
+    public List<Business> getAllBusiness(PageRequest pageRequest) {
+        Page<Business> page = businessRepository.findAll(pageRequest);
+        return page.getContent();
     }
 
     public Business getBusinessById(@NonNull final Long id) {
@@ -52,8 +55,9 @@ public class BusinessService {
         }
         return businessRepository.findBusinessByOwners(user);
     }
+
     @Transactional
-    public Business createBusiness(BusinessRequest businessRequest, User user){
+    public Business createBusiness(BusinessRequest businessRequest, User user) {
         Business business = Business.builder()
                 .name(businessRequest.getName())
                 .country(businessRequest.getCountry())
