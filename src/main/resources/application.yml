@@ -13,26 +13,38 @@ spring:
         format_sql: true
       org:
         hibernate:
-          # Envers settings
+          #Envers settings
           envers:
             audit_table_suffix: '_history'
             revision_field_name: 'history_info_id'
             revision_type_field_name: 'type'
-
+  #Security settings
   security:
     jwt:
-      # Secret used for signing JWT token.
+      #Secret used for signing JWT token.
       secret-key: 25442A472D4B614E645267556B58703273357638792F423F4528482B4D6251655368566D597133743677397A24432646294A404E635266556A576E5A72347537
       #Validity time of JWT token in milliseconds.
       expirationTime: 86400000 # a day
       refresh-token:
         expiration: 604800000 # 7 days
+  #Email sender settings
+  mail:
+    host: smtp.gmail.com
+    username: mailsendertelegram@gmail.com
+    password: kuszoulyjsjuccuo
+    port: 587
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 #Application settings
 application:
   front:
     url: localhost:4000
-
 
 #Server settings
 server:
