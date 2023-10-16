@@ -4,7 +4,7 @@ package com.gachigang.ontherun.common.enums;
  * Enum representing different categories for products.
  */
 public enum CategoryName {
-    SALATES,
+    SALADES,
     BURGERS,
     SOUPS,
     MEATS,
