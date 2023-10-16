@@ -4,6 +4,7 @@ import com.gachigang.ontherun.payload.user.request.LoginRequest;
 import com.gachigang.ontherun.payload.user.request.RegisterRequest;
 import com.gachigang.ontherun.payload.user.response.AuthenticationResponse;
 import com.gachigang.ontherun.service.AuthService;
+import com.gachigang.ontherun.service.RefreshTokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -23,6 +24,7 @@ import java.io.IOException;
 public class AuthController {
 
     private final AuthService authService;
+    private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/login")
     public ResponseEntity<Object> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -38,6 +40,6 @@ public class AuthController {
 
     @PostMapping("/refresh-token")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        authService.refreshToken(request, response);
+        refreshTokenService.refreshToken(request, response);
     }
 }
