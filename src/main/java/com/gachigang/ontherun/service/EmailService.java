@@ -1,9 +1,8 @@
 package com.gachigang.ontherun.service;
 
-import com.gachigang.ontherun.model.dto.EmailDto;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.NonNull;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.scheduling.annotation.Async;
@@ -18,12 +17,15 @@ public class EmailService {
     private final MailSender mailSender;
 
     @Async
-    public void send(@NonNull final EmailDto emailDto) {
+    public void send(@NonNull final String to,
+                     @NonNull final String subject,
+                     @NonNull final String content
+    ) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(from);
-        message.setTo(emailDto.getTo());
-        message.setSubject(emailDto.getSubject());
-        message.setText(emailDto.getContent());
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(content);
 
         mailSender.send(message);
     }
