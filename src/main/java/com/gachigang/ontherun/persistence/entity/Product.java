@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Period;
+
 /**
  * Represents a category entity and defines the schema for creating a table in the database.
  * This class establishes a connection between the class and the "categories" database table
@@ -30,7 +32,7 @@ public class Product {
 
     private String name;
     private Double price;
-    private Integer cookingTime;
+    private Period cookingTime;
     private String ingredients;
     private Double weight;
     private byte[] image;

@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
@@ -25,6 +26,7 @@ public class RefreshTokenService {
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
 
+    @Transactional
     public void refreshToken(
             HttpServletRequest request,
             HttpServletResponse response
@@ -53,6 +55,7 @@ public class RefreshTokenService {
         }
     }
 
+    @Transactional
     public void revokeAllUserTokens(User user) {
         var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
         if (validUserTokens.isEmpty())
@@ -64,6 +67,7 @@ public class RefreshTokenService {
         tokenRepository.saveAll(validUserTokens);
     }
 
+    @Transactional
     public void saveUserToken(User user, String jwtToken) {
         Token token = Token.builder()
                 .user(user)
