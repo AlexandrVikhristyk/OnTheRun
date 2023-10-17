@@ -24,7 +24,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(exclude = {"tokens", "department", "businesses", "roles"})
-@EqualsAndHashCode(exclude =  {"tokens", "department", "businesses", "roles"}, callSuper = false)
+@EqualsAndHashCode(exclude = {"tokens", "department", "businesses", "roles"}, callSuper = false)
 @Data
 @Table(name = "userInfo")
 public class User extends Audit implements UserDetails {
@@ -45,7 +45,7 @@ public class User extends Audit implements UserDetails {
     private String password;
 
     @NotAudited
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Token> tokens;
 
     @NotAudited

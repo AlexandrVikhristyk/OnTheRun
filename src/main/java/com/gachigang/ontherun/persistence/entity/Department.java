@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.envers.NotAudited;
 
 import java.util.Set;
+
 @Builder
 @Entity
 @Data
@@ -16,15 +17,15 @@ import java.util.Set;
 public class Department {
 
     @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
     private Long id;
 
     @NotAudited
-    @OneToMany(mappedBy = "department")
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
     private Set<User> users;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "business_id")
     private Business business;
 
