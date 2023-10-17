@@ -53,6 +53,9 @@ public class User extends Audit implements UserDetails {
     @JoinColumn(name = "department_id")
     private Department department;
 
+    @Column(name = "department_id", insertable = false, updatable = false)
+    private Long departmentId;
+
     @NotAudited
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

@@ -27,4 +27,7 @@ public class Department {
     @ManyToOne
     @JoinColumn(name = "business_id")
     private Business business;
+
+    @Column(name = "business_id", insertable = false, updatable = false)
+    private Long businessId;
 }
