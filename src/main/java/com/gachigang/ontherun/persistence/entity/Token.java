@@ -31,5 +31,8 @@ public class Token {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     public User user;
+
+    @Column(name = "user_id", insertable = false, updatable = false)
+    private Long userId;
 }
 

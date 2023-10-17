@@ -25,9 +25,9 @@ public class Business {
     private String country;
     private String city;
 
-    @ManyToMany(mappedBy = "businesses")
+    @ManyToMany(mappedBy = "businesses", fetch = FetchType.LAZY)
     Set<User> owners;
 
-    @OneToMany(mappedBy = "business")
+    @OneToMany(mappedBy = "business", fetch = FetchType.LAZY)
     private Set<Department> departments;
 }

@@ -1,4 +1,4 @@
-package com.gachigang.ontherun.persistence.entity;
+package com.gachigang.ontherun.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
