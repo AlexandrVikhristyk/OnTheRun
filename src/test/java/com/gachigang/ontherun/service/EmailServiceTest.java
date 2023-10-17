@@ -38,6 +38,8 @@ class EmailServiceTest {
         verify(mailSender).send(captor.capture());
         SimpleMailMessage capturedMailMessage = captor.getValue();
 
+        Objects.requireNonNull(capturedMailMessage, "capturedMailMessage must not be null");
+
         assertEquals(email, Objects.requireNonNull(capturedMailMessage.getTo())[0]);
         assertEquals(subject, capturedMailMessage.getSubject());
         assertEquals(content, capturedMailMessage.getText());
