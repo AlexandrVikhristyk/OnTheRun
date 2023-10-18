@@ -23,15 +23,18 @@ public class BusinessService {
     private final BusinessRepository businessRepository;
     private final UserRepository userRepository;
 
+    @Transactional(readOnly = true)
     public List<Business> getAllBusiness(PageRequest pageRequest) {
         Page<Business> page = businessRepository.findAll(pageRequest);
         return page.getContent();
     }
 
+    @Transactional(readOnly = true)
     public Business getBusinessById(@NonNull final Long id) {
         return businessRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Business with id " + id + " not found"));
     }
+
 
     public Business updateBusiness(UpdateBusinessRequest businessRequest, @NonNull Long id) {
         Business businessById = getBusinessById(id);

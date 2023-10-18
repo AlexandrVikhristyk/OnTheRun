@@ -19,8 +19,8 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found with email " + email));
     }
 
+    @Transactional
     public User save(User user) {
         return userRepository.save(user);
     }
-
 }

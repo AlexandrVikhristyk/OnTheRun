@@ -1,15 +1,12 @@
 package com.gachigang.ontherun.config.handler;
 
 import com.gachigang.ontherun.common.ExceptionMessage;
-import com.gachigang.ontherun.common.exception.NotFoundException;
-import com.gachigang.ontherun.persistence.entity.ErrorDetails;
+import com.gachigang.ontherun.model.dto.ErrorDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -35,12 +32,12 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     public ResponseEntity<?> handleAllExceptions(Exception exception, HttpServletRequest request) {
         log.error("Exception was thrown due unknown exception:", exception);
 
-         ResponseStatus responseStatus =
-           exception.getClass().getAnnotation(ResponseStatus.class);
-         HttpStatus status =
-           responseStatus != null ? responseStatus.value() : HttpStatus.INTERNAL_SERVER_ERROR;
+        ResponseStatus responseStatus =
+                exception.getClass().getAnnotation(ResponseStatus.class);
+        HttpStatus status =
+                responseStatus != null ? responseStatus.value() : HttpStatus.INTERNAL_SERVER_ERROR;
 
-         ErrorDetails message = ErrorDetails.builder()
+        ErrorDetails message = ErrorDetails.builder()
                 .status(status.value())
                 .timestamp(LocalDateTime.now())
                 .description(exceptionMessage.getUnauthorizedErrorMessage())
