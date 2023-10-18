@@ -35,7 +35,7 @@ public class BusinessService {
                 .orElseThrow(() -> new IllegalArgumentException("Business with id " + id + " not found"));
     }
 
-
+    @Transactional
     public Business updateBusiness(UpdateBusinessRequest businessRequest, @NonNull Long id) {
         Business businessById = getBusinessById(id);
         businessById.setName(businessRequest.getName());
@@ -52,6 +52,7 @@ public class BusinessService {
         businessRepository.deleteBusinessById(id);
     }
 
+    @Transactional(readOnly = true)
     public List<Business> findBusinessByOwners(User user) {
         if (user.getBusinesses().isEmpty()) {
             throw new RuntimeException("Not found Business for this user: " + user);

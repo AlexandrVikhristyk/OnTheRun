@@ -10,9 +10,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 
-import java.util.Objects;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,9 +37,10 @@ class EmailServiceTest {
         verify(mailSender).send(captor.capture());
         SimpleMailMessage capturedMailMessage = captor.getValue();
 
-        Objects.requireNonNull(capturedMailMessage, "capturedMailMessage must not be null");
-
-        assertEquals(email, Objects.requireNonNull(capturedMailMessage.getTo())[0]);
+        assertNotNull(capturedMailMessage);
+        assertNotNull(capturedMailMessage.getTo());
+        assertEquals(1, capturedMailMessage.getTo().length);
+        assertEquals(email, capturedMailMessage.getTo()[0]);
         assertEquals(subject, capturedMailMessage.getSubject());
         assertEquals(content, capturedMailMessage.getText());
     }
