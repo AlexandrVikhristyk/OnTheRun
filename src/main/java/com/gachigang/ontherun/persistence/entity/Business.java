@@ -26,7 +26,7 @@ public class Business {
     private String city;
 
     @ManyToMany(mappedBy = "businesses", fetch = FetchType.LAZY)
-    Set<User> owners;
+    private Set<User> owners;
 
     @OneToMany(mappedBy = "business", fetch = FetchType.LAZY)
     private Set<Department> departments;
