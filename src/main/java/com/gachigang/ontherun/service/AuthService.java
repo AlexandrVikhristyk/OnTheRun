@@ -31,7 +31,7 @@ public class AuthService {
     private final RoleRepository roleRepository;
     private final RefreshTokenService refreshTokenService;
 
-    public void authenticateUser(LoginRequest loginRequest) {
+    public AuthenticationResponse authenticateUser(LoginRequest loginRequest) {
         User user = userService.getByEmail(loginRequest.getEmail());
 
         if (!user.isEnabled()) {
@@ -45,6 +45,16 @@ public class AuthService {
         ));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String jwtToken = jwtService.generateToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+        refreshTokenService.revokeAllUserTokens(user);
+        refreshTokenService.saveUserToken(user, jwtToken);
+
+        return AuthenticationResponse.builder()
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken)
+                .build();
     }
 
     public AuthenticationResponse register(RegisterRequest registerRequest) {
@@ -61,6 +71,13 @@ public class AuthService {
         String jwtToken = jwtService.generateToken(user);
         String refreshToken = jwtService.generateRefreshToken(user);
         refreshTokenService.saveUserToken(savedUser, jwtToken);
+
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                user.getEmail(),
+                registerRequest.getPassword(),
+                user.getAuthorities()
+        ));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         return AuthenticationResponse.builder()
                 .accessToken(jwtToken)

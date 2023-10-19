@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+
 @Service
 public class JwtService {
 
@@ -41,8 +42,9 @@ public class JwtService {
         Map<String, Object> extraClaims = new HashMap<>();
         extraClaims.put("firstname", user.getFirstname());
         extraClaims.put("lastname", user.getLastname());
-        extraClaims.put("email", user.getEmail());
         extraClaims.put("login", user.getLogin());
+        extraClaims.put("email", user.getEmail());
+        extraClaims.put("role", user.getRoles());
 
         return generateToken(extraClaims, user);
     }
@@ -59,13 +61,13 @@ public class JwtService {
 
     private String buildToken(
             Map<String, Object> extraClaims,
-            User user,
+            UserDetails userDetails,
             long expiration
     ) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
-                .setSubject(user.getLogin())
+                .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
@@ -99,4 +101,3 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
-

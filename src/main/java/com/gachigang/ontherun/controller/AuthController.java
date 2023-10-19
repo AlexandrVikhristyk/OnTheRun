@@ -28,13 +28,11 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<Object> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        authService.authenticateUser(loginRequest);
-        return ResponseEntity.ok("User successfully logged in");
+        return ResponseEntity.ok(authService.authenticateUser(loginRequest));
     }
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
-
         return ResponseEntity.ok(authService.register(registerRequest));
     }
 
