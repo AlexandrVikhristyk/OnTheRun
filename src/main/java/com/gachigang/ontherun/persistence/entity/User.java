@@ -32,7 +32,7 @@ public class User extends Audit implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String surname;
+    private String firstname;
     private String lastname;
     private String login;
 
