@@ -18,7 +18,7 @@ public class Token {
     @GeneratedValue
     public Integer id;
 
-    @Column(unique = true)
+    @Column(unique = true, length = 300)
     public String token;
 
     @Enumerated(EnumType.STRING)
@@ -35,4 +35,3 @@ public class Token {
     @Column(name = "user_id", insertable = false, updatable = false)
     private Long userId;
 }
-
