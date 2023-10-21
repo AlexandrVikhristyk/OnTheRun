@@ -67,7 +67,7 @@ public class User extends Audit implements UserDetails {
     private Set<Business> businesses;
 
     @NotAudited
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_role",
             joinColumns = @JoinColumn(
