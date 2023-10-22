@@ -27,7 +27,7 @@ public class CustomLogoutHandler implements LogoutHandler {
     ) {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
-        if (authHeader == null ||!authHeader.startsWith(TOKEN_PREFIX)) {
+        if (authHeader == null || !authHeader.startsWith(TOKEN_PREFIX)) {
             return;
         }
         jwt = authHeader.substring(7);
