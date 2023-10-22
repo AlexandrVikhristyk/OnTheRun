@@ -11,6 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 import static com.gachigang.ontherun.common.ApplicationConstants.Security.TOKEN_PREFIX;
 
 @Service
@@ -26,11 +28,11 @@ public class CustomLogoutHandler implements LogoutHandler {
             @NonNull final Authentication authentication
     ) {
         final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        if (authHeader == null || !authHeader.startsWith(TOKEN_PREFIX)) {
+
+        if (Optional.ofNullable(authHeader).orElse("").startsWith(TOKEN_PREFIX)) {
             return;
         }
-        jwt = authHeader.substring(7);
+        final String jwt = authHeader.substring(TOKEN_PREFIX.length());
         Token storedToken = tokenRepository.findByToken(jwt)
                 .orElse(null);
         if (storedToken != null) {
