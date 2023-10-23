@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Period;
+import java.time.Duration;
 
 /**
  * Represents a category entity and defines the schema for creating a table in the database.
@@ -32,7 +32,7 @@ public class Product {
 
     private String name;
     private Double price;
-    private Period cookingTime;
+    private Duration cookingTime;
     private String ingredients;
     private Double weight;
     private byte[] image;
@@ -47,4 +47,11 @@ public class Product {
 
     @Column(name = "category_id", insertable = false, updatable = false)
     private Long categoryId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id")
+    private Department department;
+
+    @Column(name = "department_id", insertable = false, updatable = false)
+    private Long departmentId;
 }
