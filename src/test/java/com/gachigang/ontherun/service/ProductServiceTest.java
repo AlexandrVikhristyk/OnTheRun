@@ -80,7 +80,7 @@ public class ProductServiceTest {
 
 
     @Test
-    public void testDeleteProduct() {
+    public void testHideProduct() {
         Long productId = 1L;
         Product product = new Product();
         product.setActive(true);
@@ -88,7 +88,7 @@ public class ProductServiceTest {
         Mockito.when(productRepository.findById(productId)).thenReturn(Optional.of(product));
         Mockito.when(productRepository.save(product)).thenReturn(product);
 
-        Product result = productService.deleteProduct(productId);
+        Product result = productService.hideProduct(productId);
 
         assertFalse(result.getActive());
         verify(productRepository).save(product);

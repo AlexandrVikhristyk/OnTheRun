@@ -57,9 +57,9 @@ public class ProductController {
         return new ResponseEntity<>(productMapper.toDto(productService.createProduct(productMapper.fromDto(product))), HttpStatus.OK);
     }
 
-    @PutMapping("/delete/{id}")
-    public ResponseEntity <ProductResponse> deleteProduct(@PathVariable Long id){
-        return new ResponseEntity<>(productMapper.toDto(productService.deleteProduct(id)), HttpStatus.OK);
+    @PutMapping("/hide/{id}")
+    public ResponseEntity <ProductResponse> hideProduct(@PathVariable Long id){
+        return new ResponseEntity<>(productMapper.toDto(productService.hideProduct(id)), HttpStatus.OK);
     }
 }
 

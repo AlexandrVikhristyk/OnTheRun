@@ -45,7 +45,7 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public Product deleteProduct(Long id){
+    public Product hideProduct(Long id){
         Product product = productRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Product not found with id: " + id));
             product.setActive(false);
         return productRepository.save(product);
