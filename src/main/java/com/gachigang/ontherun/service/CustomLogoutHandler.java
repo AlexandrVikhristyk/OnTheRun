@@ -1,6 +1,5 @@
 package com.gachigang.ontherun.service;
 
-import com.gachigang.ontherun.persistence.entity.Token;
 import com.gachigang.ontherun.persistence.repository.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,8 +9,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 import static com.gachigang.ontherun.common.ApplicationConstants.Security.TOKEN_PREFIX;
 
@@ -29,17 +26,16 @@ public class CustomLogoutHandler implements LogoutHandler {
     ) {
         final String authHeader = request.getHeader("Authorization");
 
-        if (Optional.ofNullable(authHeader).orElse("").startsWith(TOKEN_PREFIX)) {
+        if (authHeader == null || !authHeader.startsWith(TOKEN_PREFIX)) {
             return;
         }
         final String jwt = authHeader.substring(TOKEN_PREFIX.length());
-        Token storedToken = tokenRepository.findByToken(jwt)
-                .orElse(null);
-        if (storedToken != null) {
+
+        tokenRepository.findByToken(jwt).ifPresent(storedToken -> {
             storedToken.setExpired(true);
             storedToken.setRevoked(true);
             tokenRepository.save(storedToken);
             SecurityContextHolder.clearContext();
-        }
+        });
     }
 }
