@@ -8,8 +8,6 @@ import com.gachigang.ontherun.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,11 +24,8 @@ public class CategoryController {
     private final CategoryMapper categoryMapper;
 
     @GetMapping
-    public ResponseEntity <List<CategoryResponse>> findAllCategory(
-            @RequestParam(required = false, defaultValue = "1") int pageNumber,
-            @RequestParam(required = false, defaultValue = "3") int pageSize){
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        return new ResponseEntity<>(categoryMapper.toDtos(categoryService.findAllCategory(pageable)), HttpStatus.OK);
+    public ResponseEntity<List<CategoryResponse>>findAllCategory(){
+        return new ResponseEntity<>(categoryMapper.toDtos(categoryService.findAllCategory()), HttpStatus.OK);
     }
 
     @PostMapping

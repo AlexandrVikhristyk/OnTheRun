@@ -33,8 +33,4 @@ public class Category {
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Product> products;
 
-    @ElementCollection
-    @CollectionTable(name = "category_product_id", joinColumns = @JoinColumn(name = "category_id"))
-    @Column(name = "product_id")
-    private List<Long> productId;
 }

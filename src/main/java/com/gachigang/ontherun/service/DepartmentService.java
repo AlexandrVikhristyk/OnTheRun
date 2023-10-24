@@ -4,6 +4,7 @@ import com.gachigang.ontherun.common.exception.NotFoundException;
 import com.gachigang.ontherun.persistence.entity.Department;
 import com.gachigang.ontherun.persistence.repository.DepartmentRepository;
 import com.gachigang.ontherun.persistence.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,5 +22,11 @@ public class DepartmentService {
     public Department getDepartmentByUserId(@NonNull final Long id) {
         return departmentRepository.findDepartmentByUsersContains(userRepository.findById(id)
                 .orElseThrow(NotFoundException::new));
+    }
+
+    @Transactional(readOnly = true)
+    public Department findByID(Long id){
+        return departmentRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("Department with id " + id + " not found"));
     }
 }

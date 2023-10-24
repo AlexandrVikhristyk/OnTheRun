@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class ProductServiceTest {
@@ -46,11 +47,16 @@ public class ProductServiceTest {
         Long categoryId = 1L;
         Pageable pageable = PageRequest.of(0, 10);
         Product product = new Product();
+        product.setId(1L);
+        product.setActive(true);
+
         Mockito.when(productRepository.findAllByCategoryIdAndActiveIsTrue(categoryId, pageable))
                 .thenReturn(Collections.singletonList(product));
 
         List<Product> result = productService.getAllByCategory(categoryId, pageable);
 
+        assertEquals(1L, result.get(0).getId());
+        assertTrue(result.get(0).getActive());
         assertEquals(1, result.size());
         assertEquals(product, result.get(0));
     }
@@ -91,7 +97,7 @@ public class ProductServiceTest {
         Product result = productService.hideProduct(productId);
 
         assertFalse(result.getActive());
-        verify(productRepository).save(product);
+        verify(productRepository, times(1)).save(product);
     }
 
 }

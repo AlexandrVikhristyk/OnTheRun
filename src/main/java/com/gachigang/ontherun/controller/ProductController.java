@@ -29,16 +29,16 @@ public class ProductController {
     public ResponseEntity <List<ProductResponse>> getAllByCategory(
                                           @PathVariable(name = "id") Long categoryId,
                                           @RequestParam(required = false, defaultValue = "0") int pageNumber,
-                                          @RequestParam(required = false, defaultValue = "3") int pageSize){
+                                          @RequestParam(required = false, defaultValue = "10") int pageSize){
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return new ResponseEntity<>(productMapper.toDtos(productService.getAllByCategory(categoryId, pageable)), HttpStatus.OK);
     }
 
-    @GetMapping("/productOfDepartment/{id}")
+    @GetMapping("/department/{id}")
     public ResponseEntity <List<ProductResponse>> getAllByDepartment(
                                           @PathVariable(name = "id") Long departmentId,
                                           @RequestParam(required = false, defaultValue = "0") int pageNumber,
-                                          @RequestParam(required = false, defaultValue = "3") int pageSize){
+                                          @RequestParam(required = false, defaultValue = "10") int pageSize){
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return new ResponseEntity<>(productMapper.toDtos(productService.getAllByDepartment(departmentId, pageable)), HttpStatus.OK);
     }
@@ -46,14 +46,14 @@ public class ProductController {
     @GetMapping("/notActive")
     public ResponseEntity<List<ProductResponse>> getAllNotActiveProduct(
                                           @RequestParam(required = false, defaultValue = "0") int pageNumber,
-                                          @RequestParam(required = false, defaultValue = "3") int pageSize){
+                                          @RequestParam(required = false, defaultValue = "10") int pageSize){
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return new ResponseEntity<>(productMapper.toDtos(productService.getAllNotActiveProduct(pageable)), HttpStatus.OK);
     }
 
 
     @PostMapping
-    public ResponseEntity<ProductResponse> createProduct (@Valid @RequestBody CreateProductRequest product){
+    public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody CreateProductRequest product){
         return new ResponseEntity<>(productMapper.toDto(productService.createProduct(productMapper.fromDto(product))), HttpStatus.OK);
     }
 

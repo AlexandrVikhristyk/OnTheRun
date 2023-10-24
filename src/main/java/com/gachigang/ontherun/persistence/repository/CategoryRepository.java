@@ -13,4 +13,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @see Category
  */
 public interface CategoryRepository extends JpaRepository<Category, Long> {
+    Boolean existsCategoryById(Long id);
 }
