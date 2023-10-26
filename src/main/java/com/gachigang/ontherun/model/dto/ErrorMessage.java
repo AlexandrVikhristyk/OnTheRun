@@ -4,18 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 /**
  * Class for response object of any Exception in our app.
  */
 @Data
 @AllArgsConstructor
 @Builder
-public class ErrorDetails {
+public class ErrorMessage {
 
-    private Integer status;
-    private LocalDateTime timestamp;
+    private int status;
     private String description;
-    private String url;
 }
