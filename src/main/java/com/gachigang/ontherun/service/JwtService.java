@@ -1,5 +1,6 @@
 package com.gachigang.ontherun.service;
 
+import com.gachigang.ontherun.persistence.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -14,6 +15,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+
 
 @Service
 public class JwtService {
@@ -36,21 +38,25 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(User user) {
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("firstname", user.getFirstname());
+        extraClaims.put("lastname", user.getLastname());
+        extraClaims.put("login", user.getLogin());
+        extraClaims.put("email", user.getEmail());
+        extraClaims.put("roles", user.getRoles());
+
+        return generateToken(extraClaims, user);
     }
 
-    public String generateToken(
-            Map<String, Object> extraClaims,
-            UserDetails userDetails
-    ) {
-        return buildToken(extraClaims, userDetails, jwtExpiration);
+    public String generateToken(Map<String, Object> extraClaims, User user) {
+        return buildToken(extraClaims, user, jwtExpiration);
     }
 
     public String generateRefreshToken(
-            UserDetails userDetails
+            User user
     ) {
-        return buildToken(new HashMap<>(), userDetails, refreshExpiration);
+        return buildToken(new HashMap<>(), user, refreshExpiration);
     }
 
     private String buildToken(
@@ -95,4 +101,3 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
-

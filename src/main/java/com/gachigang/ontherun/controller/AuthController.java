@@ -27,14 +27,12 @@ public class AuthController {
     private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/login")
-    public ResponseEntity<Object> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        authService.authenticateUser(loginRequest);
-        return ResponseEntity.ok("User successfully logged in");
+    public ResponseEntity<AuthenticationResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.ok(authService.authenticateUser(loginRequest));
     }
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
-
         return ResponseEntity.ok(authService.register(registerRequest));
     }
 
