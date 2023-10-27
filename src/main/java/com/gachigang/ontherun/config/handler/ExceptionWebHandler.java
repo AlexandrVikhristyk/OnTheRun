@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ExceptionWebHandler {
 
     public HttpStatus getHttpStatus(@Nonnull final Exception exception,
-                                    @Nonnull final HttpStatus fallBackHttpStatus) {
+                                    @Nonnull final HttpStatus status) {
         final ResponseStatus responseStatus = exception.getClass().getAnnotation(ResponseStatus.class);
-        return responseStatus != null ? responseStatus.value() : fallBackHttpStatus;
+        return responseStatus != null ? responseStatus.value() : status;
     }
 
     public ResponseEntity<ErrorMessage> getErrorResponse(@NonNull final Exception exception,
