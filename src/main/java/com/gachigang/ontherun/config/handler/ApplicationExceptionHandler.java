@@ -1,5 +1,7 @@
 package com.gachigang.ontherun.config.handler;
 
+import com.gachigang.ontherun.common.exception.AccessDeniedException;
+import com.gachigang.ontherun.common.exception.AuthenticationException;
 import com.gachigang.ontherun.common.exception.NotFoundException;
 import com.gachigang.ontherun.common.exception.UserAlreadyExistException;
 import com.gachigang.ontherun.model.dto.ErrorMessage;
@@ -8,16 +10,13 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import java.util.Optional;
 
 /**
  * Exception handler for application.
@@ -25,6 +24,7 @@ import java.util.Optional;
 @Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
+@PropertySource("classpath:message.properties")
 public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final ExceptionWebHandler exceptionWebHandler;
@@ -34,11 +34,9 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
      * Handle AuthenticationExceptions.
      */
     @ExceptionHandler({AuthenticationException.class, JwtException.class})
-    public ResponseEntity<ErrorMessage> handleAuthenticationException(@NonNull final Exception exception) {
-        log.error("Exception was thrown due authentication error.", exception);
-        final Optional<String> responseMessage = Optional.ofNullable(environment.getProperty("unauthorized.error.message"));;
-        return exceptionWebHandler.getErrorResponse(exception, HttpStatus.UNAUTHORIZED,
-                String.valueOf(responseMessage));
+    public ResponseEntity<ErrorMessage> handleAuthenticationException(@NonNull final AuthenticationException exception) {
+        log.error(exception.getLogMessage(), exception);
+        return exceptionWebHandler.getErrorResponse(exception, HttpStatus.UNAUTHORIZED, exception.getErrorMessage());
     }
 
     /**
@@ -46,19 +44,17 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
      */
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorMessage> handleNotFoundException(@NonNull final NotFoundException exception) {
-        log.error("Exception was thrown because the resource was not found.", exception);
-        final String responseMessage = environment.getProperty("not.found.error.message");
-        return exceptionWebHandler.getErrorResponse(exception, HttpStatus.NOT_FOUND, responseMessage);
+        log.error(exception.getLogMessage(), exception);
+        return exceptionWebHandler.getErrorResponse(exception, HttpStatus.NOT_FOUND, exception.getErrorMessage());
     }
 
     /**
      * Handle ConstraintViolationException.
      */
     @ExceptionHandler({ConstraintViolationException.class, UserAlreadyExistException.class})
-    public ResponseEntity<ErrorMessage> handleResourceNotFoundException(@NonNull final Exception exception) {
-        log.error("Exception was thrown because request is not valid.", exception);
-        final String responseMessage = environment.getProperty("bad.request.error.message");;
-        return exceptionWebHandler.getErrorResponse(exception, HttpStatus.BAD_REQUEST, responseMessage);
+    public ResponseEntity<ErrorMessage> handleResourceNotFoundException(@NonNull final UserAlreadyExistException exception) {
+        log.error(exception.getLogMessage(), exception);
+        return exceptionWebHandler.getErrorResponse(exception, HttpStatus.BAD_REQUEST, exception.getErrorMessage());
     }
 
     /**
@@ -66,10 +62,8 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
      */
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorMessage> handleAccessDeniedException(@NonNull final AccessDeniedException exception) {
-        log.error("Exception was thrown because access was denied.", exception);
-        final String responseMessage = environment.getProperty("access.denied.error.message");;
-        return exceptionWebHandler.getErrorResponse(exception, HttpStatus.UNAUTHORIZED,
-                responseMessage);
+        log.error(exception.getLogMessage(), exception);
+        return exceptionWebHandler.getErrorResponse(exception, HttpStatus.UNAUTHORIZED, exception.getLogMessage());
     }
 
     /**
@@ -78,8 +72,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> handleAllExceptions(@NonNull final Exception exception) {
         log.error("Unknown exception.", exception);
-        final var responseMessage = environment.getProperty("internal.server.error.message");;
-        return exceptionWebHandler.getErrorResponse(exception, HttpStatus.INTERNAL_SERVER_ERROR,
-                responseMessage);
+        final String responseMessage = environment.getProperty("internal.server.error.message");
+        return exceptionWebHandler.getErrorResponse(exception, HttpStatus.INTERNAL_SERVER_ERROR, responseMessage);
     }
 }
