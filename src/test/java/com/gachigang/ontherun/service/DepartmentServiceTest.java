@@ -1,8 +1,10 @@
 package com.gachigang.ontherun.service;
 
 import com.gachigang.ontherun.common.exception.NotFoundException;
+import com.gachigang.ontherun.persistence.entity.Business;
 import com.gachigang.ontherun.persistence.entity.Department;
 import com.gachigang.ontherun.persistence.entity.User;
+import com.gachigang.ontherun.persistence.repository.BusinessRepository;
 import com.gachigang.ontherun.persistence.repository.DepartmentRepository;
 import com.gachigang.ontherun.persistence.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -24,6 +26,8 @@ public class DepartmentServiceTest {
     private DepartmentRepository departmentRepository;
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private BusinessRepository businessRepository;
 
     @InjectMocks
     private DepartmentService departmentService;
@@ -57,6 +61,42 @@ public class DepartmentServiceTest {
     @Test
     public void testGetDepartmentByUserIdUserWithNoDepartment() {
         assertThrows(RuntimeException.class, () -> departmentService.getDepartmentByUserId(4L));
+    }
+
+    @Test
+    public void testGetDepartmentsByBusinessIdSuccess() {
+        Business business = Business.builder()
+                .id(1L)
+                .build();
+        Department department1 = Department.builder()
+                .id(1L)
+                .business(business)
+                .build();
+        Department department2= Department.builder()
+                .id(2L)
+                .business(business)
+                .build();
+        business.setDepartments(Set.of(department1, department2));
+
+        when(businessRepository.findById(1L)).thenReturn(Optional.of(business));
+        when(departmentRepository.findDepartmentsByBusiness(business)).thenReturn(Set.of(department1, department2));
+
+        Set<Department> result = departmentService.getDepartmentsByBusinessId(1L);
+        assertNotNull(result);
+        assertEquals(business.getDepartments(), result);
+    }
+
+    @Test
+    public void testGetDepartmentsByBusinessIdInvalidBusinessId() {
+        Long invalidBusinessId = 2L;
+        when(businessRepository.findById(invalidBusinessId)).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> departmentService.getDepartmentsByBusinessId(invalidBusinessId));
+    }
+
+    @Test
+    public void testGetDepartmentsByBusinessIdWithNoDepartments() {
+        assertThrows(RuntimeException.class, () -> departmentService.getDepartmentsByBusinessId(1L));
     }
 }
 

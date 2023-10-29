@@ -21,7 +21,7 @@ public class UserServiceTest {
 
     private final static User USER = User.builder()
             .id(1L)
-            .surname("testsurname")
+            .firstname("testfirstname")
             .lastname("testlastname")
             .login("testLogin")
             .email("test@email.com")
