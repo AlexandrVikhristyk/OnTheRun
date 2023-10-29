@@ -2,6 +2,7 @@ package com.gachigang.ontherun.service;
 
 import com.gachigang.ontherun.common.enums.UserRole;
 import com.gachigang.ontherun.common.exception.AccountDisabledException;
+import com.gachigang.ontherun.common.exception.UserAlreadyExistException;
 import com.gachigang.ontherun.payload.user.request.LoginRequest;
 import com.gachigang.ontherun.payload.user.request.RegisterRequest;
 import com.gachigang.ontherun.payload.user.response.AuthenticationResponse;
@@ -60,6 +61,10 @@ public class AuthService {
     public AuthenticationResponse register(RegisterRequest registerRequest) {
         Role role = roleRepository.findById(registerRequest.getRoleId())
                 .orElse(roleRepository.findByName(UserRole.USER.getRole()));
+
+        if(userRepository.existsByEmail(registerRequest.getEmail())) {
+            throw new UserAlreadyExistException();
+        }
 
         User user = User.builder()
                 .email(registerRequest.getEmail())
