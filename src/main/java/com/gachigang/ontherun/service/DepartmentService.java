@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
-
 @Service
 @RequiredArgsConstructor
 public class DepartmentService {
@@ -27,8 +26,9 @@ public class DepartmentService {
                 .orElseThrow(NotFoundException::new));
     }
 
+    @Transactional(readOnly = true)
     public Set<Department> getDepartmentsByBusinessId(@NonNull Long businessId) {
         return departmentRepository.findDepartmentsByBusiness(businessRepository.findById(businessId)
-                .orElseThrow(() -> new IllegalArgumentException("Business with id " + businessId + " not found")));
+                .orElseThrow(NotFoundException::new));
     }
 }

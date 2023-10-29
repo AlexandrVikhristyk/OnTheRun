@@ -13,7 +13,6 @@ import com.gachigang.ontherun.common.exception.NotFoundException;
 
 import java.util.Set;
 
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/departments")
@@ -36,7 +35,7 @@ public class DepartmentController {
      * Endpoint for getting the departments of the specific business via id
      *
      * @return A list of {@link Department} objects.
-     * @throws {@link IllegalArgumentException} if business with id was not found,
+     * @throws {@link NotFoundException} if business with id was not found,
      * or {@link RuntimeException} if there is no departments for this business
      */
     @GetMapping("/{businessId}")
