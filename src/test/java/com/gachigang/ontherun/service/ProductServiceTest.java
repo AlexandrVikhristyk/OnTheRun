@@ -6,6 +6,8 @@ import com.gachigang.ontherun.persistence.entity.Product;
 import com.gachigang.ontherun.persistence.repository.CategoryRepository;
 import com.gachigang.ontherun.persistence.repository.DepartmentRepository;
 import com.gachigang.ontherun.persistence.repository.ProductRepository;
+import jakarta.persistence.EntityNotFoundException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,11 +19,9 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 public class ProductServiceTest {
 
@@ -37,6 +37,12 @@ public class ProductServiceTest {
     @Mock
     private DepartmentRepository departmentRepository;
 
+    @Mock
+    private CategoryService categoryService;
+
+    @Mock
+    private DepartmentService departmentService;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -50,7 +56,7 @@ public class ProductServiceTest {
         product.setId(1L);
         product.setActive(true);
 
-        Mockito.when(productRepository.findAllByCategoryIdAndActiveIsTrue(categoryId, pageable))
+        when(productRepository.findAllByCategoryIdAndActiveIsTrue(categoryId, pageable))
                 .thenReturn(Collections.singletonList(product));
 
         List<Product> result = productService.getAllByCategory(categoryId, pageable);
@@ -63,41 +69,91 @@ public class ProductServiceTest {
 
     @Test
     public void testCreateProduct() {
+        Product product = Product.builder()
+                .categoryId(1L)
+                .departmentId(2L)
+                .build();
 
-        Product product = new Product();
-        product.setActive(true);
-        product.setCategoryId(1L);
-        product.setDepartmentId(1L);
+        Category category = Category.builder()
+                .id(1L)
+                .build();
 
-        Category category = new Category();
-        Department department = new Department();
+        Department department = Department.builder()
+                .id(2L)
+                .build();
 
-        Mockito.when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
-        Mockito.when(departmentRepository.findById(1L)).thenReturn(Optional.of(department));
-        Mockito.when(productRepository.save(product)).thenReturn(product);
+        Mockito.when(categoryService.findById(1L)).thenReturn(category);
+        Mockito.when(departmentService.findByID(2L)).thenReturn(department);
+        Mockito.when(productRepository.save(Mockito.any(Product.class))).thenReturn(product);
 
-        Product result = productService.createProduct(product);
+        Product createdProduct = productService.createProduct(product);
 
-        assertNotNull(result);
-        assertEquals(category, result.getCategory());
-        assertEquals(department, result.getDepartment());
-        assertTrue(result.getActive());
+        Assertions.assertNotNull(createdProduct);
+        Assertions.assertEquals(category, createdProduct.getCategory());
+        Assertions.assertEquals(department, createdProduct.getDepartment());
+
+        Mockito.verify(categoryService, Mockito.times(1)).findById(1L);
+        Mockito.verify(departmentService, Mockito.times(1)).findByID(2L);
+        Mockito.verify(productRepository, Mockito.times(1)).save(product);
     }
 
 
     @Test
-    public void testHideProduct() {
-        Long productId = 1L;
-        Product product = new Product();
-        product.setActive(true);
+    public void testUpdateProduct() {
 
-        Mockito.when(productRepository.findById(productId)).thenReturn(Optional.of(product));
-        Mockito.when(productRepository.save(product)).thenReturn(product);
+        Product existingProduct = Product.builder()
+                .id(1L)
+                .categoryId(1L)
+                .departmentId(2L)
+                .build();
 
-        Product result = productService.hideProduct(productId);
+        Product updatedProduct = Product.builder()
+                .id(1L)
+                .categoryId(3L)
+                .departmentId(4L)
+                .build();
 
-        assertFalse(result.getActive());
-        verify(productRepository, times(1)).save(product);
+        Category category = Category.builder()
+                .id(3L)
+                .build();
+
+        Department department = Department.builder()
+                .id(4L)
+                .build();
+
+        Mockito.when(productRepository.existsProductById(1L)).thenReturn(true);
+        Mockito.when(categoryService.findById(3L)).thenReturn(category);
+        Mockito.when(departmentService.findByID(4L)).thenReturn(department);
+        Mockito.when(productRepository.save(Mockito.any(Product.class))).thenReturn(updatedProduct);
+
+        Product updated = productService.updateProduct(updatedProduct);
+
+        Assertions.assertNotNull(updated);
+        Assertions.assertEquals(category, updated.getCategory());
+        Assertions.assertEquals(department, updated.getDepartment());
+
+        Mockito.verify(productRepository, Mockito.times(1)).existsProductById(1L);
+        Mockito.verify(categoryService, Mockito.times(1)).findById(3L);
+        Mockito.verify(departmentService, Mockito.times(1)).findByID(4L);
+        Mockito.verify(productRepository, Mockito.times(1)).save(updatedProduct);
+    }
+
+    @Test
+    public void testUpdateProduct_ProductNotFound() {
+        Product nonExistingProduct = Product.builder()
+                .id(1L)
+                .categoryId(3L)
+                .departmentId(4L)
+                .build();
+
+        Mockito.when(productRepository.existsProductById(1L)).thenReturn(false);
+
+        Assertions.assertThrows(EntityNotFoundException.class, () -> productService.updateProduct(nonExistingProduct));
+
+        Mockito.verify(productRepository, Mockito.times(1)).existsProductById(1L);
+        Mockito.verify(categoryService, Mockito.never()).findById(3L);
+        Mockito.verify(departmentService, Mockito.never()).findByID(4L);
+        Mockito.verify(productRepository, Mockito.never()).save(Mockito.any(Product.class));
     }
 
 }

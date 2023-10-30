@@ -46,9 +46,16 @@ public class ProductService {
     }
 
     @Transactional
-    public Product hideProduct(Long id){
-        Product product = productRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Product not found with id: " + id));
-        product.setActive(false);
+    public Product updateProduct(Product product){
+        if (!productRepository.existsProductById(product.getId())){
+            throw new EntityNotFoundException("Product not found");
+        }
+        Category category = categoryService.findById(product.getCategoryId());
+        Department department = departmentService.findByID(product.getDepartmentId());
+
+        product.setCategory(category);
+        product.setDepartment(department);
+
         return productRepository.save(product);
     }
 }

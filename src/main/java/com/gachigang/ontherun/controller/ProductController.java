@@ -2,11 +2,11 @@ package com.gachigang.ontherun.controller;
 
 import com.gachigang.ontherun.common.mapper.ProductMapper;
 import com.gachigang.ontherun.payload.product.request.CreateProductRequest;
+import com.gachigang.ontherun.payload.product.request.ProductUpdateRequest;
 import com.gachigang.ontherun.payload.product.response.ProductResponse;
 import com.gachigang.ontherun.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -17,16 +17,13 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 @RequestMapping("/product")
 public class ProductController {
-
     private final ProductService productService;
     private final ProductMapper productMapper;
 
-
     @GetMapping("/{id}")
-    public ResponseEntity <List<ProductResponse>> getAllByCategory(
+    public ResponseEntity<List<ProductResponse>> getAllByCategory(
                                           @PathVariable(name = "id") Long categoryId,
                                           @RequestParam(required = false, defaultValue = "0") int pageNumber,
                                           @RequestParam(required = false, defaultValue = "10") int pageSize){
@@ -35,7 +32,7 @@ public class ProductController {
     }
 
     @GetMapping("/department/{id}")
-    public ResponseEntity <List<ProductResponse>> getAllByDepartment(
+    public ResponseEntity<List<ProductResponse>> getAllByDepartment(
                                           @PathVariable(name = "id") Long departmentId,
                                           @RequestParam(required = false, defaultValue = "0") int pageNumber,
                                           @RequestParam(required = false, defaultValue = "10") int pageSize){
@@ -57,9 +54,9 @@ public class ProductController {
         return new ResponseEntity<>(productMapper.toDto(productService.createProduct(productMapper.fromDto(product))), HttpStatus.OK);
     }
 
-    @PutMapping("/hide/{id}")
-    public ResponseEntity <ProductResponse> hideProduct(@PathVariable Long id){
-        return new ResponseEntity<>(productMapper.toDto(productService.hideProduct(id)), HttpStatus.OK);
+    @PutMapping
+    public ResponseEntity<ProductResponse> updateProduct(@Valid @RequestBody ProductUpdateRequest productUpdateRequest){
+        return new ResponseEntity<>(productMapper.toDto(productService.updateProduct(productMapper.fromDto(productUpdateRequest))), HttpStatus.OK);
     }
 }
 

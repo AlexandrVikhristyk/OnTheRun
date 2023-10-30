@@ -32,7 +32,7 @@ public class CategoryService {
 
     @Transactional
     public Category updateCategory(Category category){
-        if (categoryRepository.existsCategoryById(category.getId()) == false){
+        if (!categoryRepository.existsCategoryById(category.getId())){
             throw new EntityNotFoundException("Category Not Found");
         }
         return categoryRepository.save(category);
