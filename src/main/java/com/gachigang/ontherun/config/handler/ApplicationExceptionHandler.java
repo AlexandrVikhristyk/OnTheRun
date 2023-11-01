@@ -1,6 +1,7 @@
 package com.gachigang.ontherun.config.handler;
 
-import com.gachigang.ontherun.common.exception.*;
+import com.gachigang.ontherun.common.exception.ApplicationException;
+import com.gachigang.ontherun.common.exception.ConstraintViolationException;
 import com.gachigang.ontherun.model.dto.ErrorMessage;
 import io.jsonwebtoken.JwtException;
 import lombok.NonNull;
@@ -27,24 +28,13 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     private final Environment environment;
 
     /**
-     * Handle AuthenticationExceptions.
-     */
-    @ExceptionHandler(JwtException.class)
-    public ResponseEntity<ErrorMessage> jwtException(@NonNull final AuthenticationException exception) {
-        log.error(exception.getLogMessage(), exception);
-        final String responseMessage = environment.getProperty(exception.getErrorMessageKey());
-        final HttpStatus responseHttpStatus = exceptionWebHandler.getHttpStatus(exception, HttpStatus.UNAUTHORIZED);
-        return exceptionWebHandler.getErrorResponse(exception, responseHttpStatus, responseMessage);
-    }
-
-    /**
      * Handle Not found exception.
      */
     @ExceptionHandler(ApplicationException.class)
     public ResponseEntity<ErrorMessage> handleApplicationException(@NonNull final ApplicationException exception) {
         log.error(exception.getLogMessage(), exception);
         final String responseMessage = environment.getProperty(exception.getErrorMessageKey());
-        final HttpStatus responseHttpStatus = exceptionWebHandler.getHttpStatus(exception, HttpStatus.NOT_FOUND);
+        final HttpStatus responseHttpStatus = exceptionWebHandler.getHttpStatus(exception, HttpStatus.BAD_REQUEST);
         return exceptionWebHandler.getErrorResponse(exception, responseHttpStatus, responseMessage);
     }
 
@@ -56,6 +46,17 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
         log.error(exception.getLogMessage(), exception);
         final String responseMessage = environment.getProperty(exception.getErrorMessageKey());
         final HttpStatus responseHttpStatus = exceptionWebHandler.getHttpStatus(exception, HttpStatus.BAD_REQUEST);
+        return exceptionWebHandler.getErrorResponse(exception, responseHttpStatus, responseMessage);
+    }
+
+    /**
+     * Handle AuthenticationExceptions.
+     */
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ErrorMessage> jwtException(@NonNull final JwtException exception) {
+        log.error("Exception was thrown because the token is not valid", exception);
+        final String responseMessage = environment.getProperty("jwt.invalid.token.error.message");
+        final HttpStatus responseHttpStatus = exceptionWebHandler.getHttpStatus(exception, HttpStatus.UNAUTHORIZED);
         return exceptionWebHandler.getErrorResponse(exception, responseHttpStatus, responseMessage);
     }
 
