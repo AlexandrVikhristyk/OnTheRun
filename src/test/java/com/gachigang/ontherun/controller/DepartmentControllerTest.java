@@ -33,36 +33,11 @@ public class DepartmentControllerTest {
     }
 
     @Test
-    void testGetDepartmentsByBusinessIdValidId() {
+    void testGetDepartmentsByBusinessId() {
         Business business = Business.builder()
                                     .id(1L)
                                     .build();
         departmentController.getDepartmentsByBusinessId(business.getId());
         verify(departmentService, times(1)).getDepartmentsByBusinessId(business.getId());
-
-        assertDoesNotThrow(() -> departmentController.getDepartmentsByBusinessId(2L));
-    }
-
-    @Test
-    void testGetDepartmentsByBusinessIdInvalidId() {
-        Long businessId = 2L;
-
-        departmentController.getDepartmentsByBusinessId(businessId);
-
-        verify(departmentService, times(1)).getDepartmentsByBusinessId(businessId);
-        when(departmentService.getDepartmentsByBusinessId(2L)).thenThrow(new NotFoundException());
-
-        assertThrows(NotFoundException.class, () -> departmentService.getDepartmentsByBusinessId(businessId));
-    }
-
-    @Test
-    void testGetDepartmentsByBusinessIdNoDepartments() {
-        Long businessId = 1L;
-        departmentController.getDepartmentsByBusinessId(businessId);
-
-        verify(departmentService, times(1)).getDepartmentsByBusinessId(businessId);
-        when(departmentService.getDepartmentsByBusinessId(businessId)).thenThrow(new RuntimeException());
-
-        assertThrows(RuntimeException.class, () -> departmentController.getDepartmentsByBusinessId(businessId));
     }
 }

@@ -3,6 +3,7 @@ package com.gachigang.ontherun.controller;
 import com.gachigang.ontherun.persistence.entity.Department;
 import com.gachigang.ontherun.persistence.entity.User;
 import com.gachigang.ontherun.service.DepartmentService;
+import com.gachigang.ontherun.model.dto.DepartmentDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,12 +35,12 @@ public class DepartmentController {
     /**
      * Endpoint for getting the departments of the specific business via id
      *
-     * @return A list of {@link Department} objects.
+     * @return A list of {@link DepartmentDto} objects.
      * @throws {@link NotFoundException} if business with id was not found,
      * or {@link RuntimeException} if there is no departments for this business
      */
     @GetMapping("/{businessId}")
-    public Set<Department> getDepartmentsByBusinessId(@PathVariable Long businessId) {
+    public Set<DepartmentDto> getDepartmentsByBusinessId(@PathVariable Long businessId) {
         return departmentService.getDepartmentsByBusinessId(businessId);
     }
 }
