@@ -1,10 +1,7 @@
 package com.gachigang.ontherun.persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.envers.NotAudited;
 
 import java.util.Set;
@@ -12,6 +9,8 @@ import java.util.Set;
 @Builder
 @Entity
 @Data
+@ToString(exclude = "business")
+@EqualsAndHashCode(exclude = "business")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Department {

@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -92,7 +93,8 @@ public class DepartmentServiceTest {
 
         Set<DepartmentDto> result = departmentService.getDepartmentsByBusinessId(1L);
         assertNotNull(result);
-        assertEquals(business.getDepartments(), result);
+        Set<DepartmentDto> expected = business.getDepartments().stream().map(x -> departmentMapper.toDto(x)).collect(Collectors.toSet());
+        assertEquals(expected, result);
     }
 
     @Test
