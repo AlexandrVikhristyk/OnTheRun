@@ -1,10 +1,7 @@
 package com.gachigang.ontherun.persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Set;
 
@@ -14,6 +11,8 @@ import java.util.Set;
 @Builder
 @Entity
 @Data
+@ToString(exclude = "departments")
+@EqualsAndHashCode(exclude = "departments")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Business {
