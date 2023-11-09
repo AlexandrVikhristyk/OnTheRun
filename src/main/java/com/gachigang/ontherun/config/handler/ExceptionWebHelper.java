@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Component
-public class ExceptionWebHandler {
+public class ExceptionWebHelper {
 
     public HttpStatus getHttpStatus(@Nonnull final Exception exception,
                                     @Nonnull final HttpStatus status) {

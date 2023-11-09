@@ -24,7 +24,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @PropertySource("classpath:message.properties")
 public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private final ExceptionWebHandler exceptionWebHandler;
+    private final ExceptionWebHelper exceptionWebHelper;
     private final Environment environment;
 
     /**
@@ -34,8 +34,8 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     public ResponseEntity<ErrorMessage> handleApplicationException(@NonNull final ApplicationException exception) {
         log.error(exception.getLogMessage(), exception);
         final String responseMessage = environment.getProperty(exception.getErrorMessageKey());
-        final HttpStatus responseHttpStatus = exceptionWebHandler.getHttpStatus(exception, HttpStatus.BAD_REQUEST);
-        return exceptionWebHandler.getErrorResponse(exception, responseHttpStatus, responseMessage);
+        final HttpStatus responseHttpStatus = exceptionWebHelper.getHttpStatus(exception, HttpStatus.BAD_REQUEST);
+        return exceptionWebHelper.getErrorResponse(exception, responseHttpStatus, responseMessage);
     }
 
     /**
@@ -45,8 +45,8 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     public ResponseEntity<ErrorMessage> handleResourceNotFoundException(@NonNull final ConstraintViolationException exception) {
         log.error(exception.getLogMessage(), exception);
         final String responseMessage = environment.getProperty(exception.getErrorMessageKey());
-        final HttpStatus responseHttpStatus = exceptionWebHandler.getHttpStatus(exception, HttpStatus.BAD_REQUEST);
-        return exceptionWebHandler.getErrorResponse(exception, responseHttpStatus, responseMessage);
+        final HttpStatus responseHttpStatus = exceptionWebHelper.getHttpStatus(exception, HttpStatus.BAD_REQUEST);
+        return exceptionWebHelper.getErrorResponse(exception, responseHttpStatus, responseMessage);
     }
 
     /**
@@ -56,8 +56,8 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     public ResponseEntity<ErrorMessage> jwtException(@NonNull final JwtException exception) {
         log.error("Exception was thrown because the token is not valid", exception);
         final String responseMessage = environment.getProperty("jwt.invalid.token.error.message");
-        final HttpStatus responseHttpStatus = exceptionWebHandler.getHttpStatus(exception, HttpStatus.UNAUTHORIZED);
-        return exceptionWebHandler.getErrorResponse(exception, responseHttpStatus, responseMessage);
+        final HttpStatus responseHttpStatus = exceptionWebHelper.getHttpStatus(exception, HttpStatus.UNAUTHORIZED);
+        return exceptionWebHelper.getErrorResponse(exception, responseHttpStatus, responseMessage);
     }
 
     /**
@@ -67,7 +67,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler 
     public ResponseEntity<ErrorMessage> handleAllExceptions(@NonNull final Exception exception) {
         log.error("Unknown exception.", exception);
         final String responseMessage = environment.getProperty("internal.server.error.message");
-        final HttpStatus responseHttpStatus = exceptionWebHandler.getHttpStatus(exception, HttpStatus.INTERNAL_SERVER_ERROR);
-        return exceptionWebHandler.getErrorResponse(exception, responseHttpStatus, responseMessage);
+        final HttpStatus responseHttpStatus = exceptionWebHelper.getHttpStatus(exception, HttpStatus.INTERNAL_SERVER_ERROR);
+        return exceptionWebHelper.getErrorResponse(exception, responseHttpStatus, responseMessage);
     }
 }
