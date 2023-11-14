@@ -9,6 +9,10 @@ import java.util.regex.Pattern;
  */
 @UtilityClass
 public class ApplicationConstants {
+
+    /**
+     * Inner utility class for validation-related constants.
+     */
     @UtilityClass
     public class Validation {
         /**
@@ -24,6 +28,9 @@ public class ApplicationConstants {
         public static final Pattern PASSWORD_PATTERN = Pattern.compile(Validation.PASSWORD_REGEX);
     }
 
+    /**
+     * Inner utility class for constants related to security part.
+     */
     @UtilityClass
     public class Security {
         public static final String TOKEN_PREFIX = "Bearer ";

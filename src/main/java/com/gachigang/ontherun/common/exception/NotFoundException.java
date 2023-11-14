@@ -1,16 +1,14 @@
 package com.gachigang.ontherun.common.exception;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * Exception class representing HTTP 404(Not found).
  */
-public class NotFoundException extends RuntimeException {
-
-    @Value("${not.found.error.message}")
-    private static String notFoundErrorMessage;
-
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class NotFoundException extends ApplicationException {
     public NotFoundException() {
-        super(notFoundErrorMessage);
+        super("not.found.error.message", "Exception was thrown because the resource was not found.");
     }
 }

@@ -1,88 +1,73 @@
 package com.gachigang.ontherun.config.handler;
 
-import com.gachigang.ontherun.common.ExceptionMessage;
-import com.gachigang.ontherun.model.dto.ErrorDetails;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolationException;
+import com.gachigang.ontherun.common.exception.ApplicationException;
+import com.gachigang.ontherun.common.exception.ConstraintViolationException;
+import com.gachigang.ontherun.model.dto.ErrorMessage;
+import io.jsonwebtoken.JwtException;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import java.time.LocalDateTime;
 
 /**
  * Exception handler for application.
  */
+@Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
-@Slf4j
+@PropertySource("classpath:message.properties")
 public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private final ExceptionMessage exceptionMessage;
-
-    /**
-     * Handle all other exceptions.
-     */
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleAllExceptions(Exception exception, HttpServletRequest request) {
-        log.error("Exception was thrown due unknown exception:", exception);
-
-        ResponseStatus responseStatus =
-                exception.getClass().getAnnotation(ResponseStatus.class);
-        HttpStatus status =
-                responseStatus != null ? responseStatus.value() : HttpStatus.INTERNAL_SERVER_ERROR;
-
-        ErrorDetails message = ErrorDetails.builder()
-                .status(status.value())
-                .timestamp(LocalDateTime.now())
-                .description(exceptionMessage.getUnauthorizedErrorMessage())
-                .url(request.getRequestURL().toString())
-                .build();
-        return new ResponseEntity<>(message, status);
-    }
+    private final ExceptionWebHelper exceptionWebHelper;
+    private final Environment environment;
 
     /**
      * Handle Not found exception.
      */
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorDetails> handleNotFoundException(HttpServletRequest request,
-                                                                RuntimeException exception) {
-        ResponseStatus responseStatus =
-                exception.getClass().getAnnotation(ResponseStatus.class);
-        HttpStatus status =
-                responseStatus != null ? responseStatus.value() : HttpStatus.INTERNAL_SERVER_ERROR;
-        log.error("Exception was thrown because resource was not found:", exception);
-        ErrorDetails message = ErrorDetails.builder()
-                .status(status.value())
-                .timestamp(LocalDateTime.now())
-                .description(exceptionMessage.getNotFoundErrorMessage())
-                .url(request.getRequestURL().toString())
-                .build();
-        return ResponseEntity.status(status.value()).body(message);
+    @ExceptionHandler(ApplicationException.class)
+    public ResponseEntity<ErrorMessage> handleApplicationException(@NonNull final ApplicationException exception) {
+        log.error(exception.getLogMessage(), exception);
+        final String responseMessage = environment.getProperty(exception.getErrorMessageKey());
+        final HttpStatus responseHttpStatus = exceptionWebHelper.getHttpStatus(exception, HttpStatus.BAD_REQUEST);
+        return exceptionWebHelper.getErrorResponse(exception, responseHttpStatus, responseMessage);
     }
 
     /**
      * Handle ConstraintViolationException.
      */
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorDetails> handleResourceNotFoundException(HttpServletRequest request,
-                                                                        Exception exception) {
-        ResponseStatus responseStatus =
-                exception.getClass().getAnnotation(ResponseStatus.class);
-        HttpStatus status =
-                responseStatus != null ? responseStatus.value() : HttpStatus.INTERNAL_SERVER_ERROR;
-        log.error("Exception was thrown because passed data was not valid:", exception);
-        ErrorDetails message = ErrorDetails.builder()
-                .status(status.value())
-                .timestamp(LocalDateTime.now())
-                .description(exceptionMessage.getNotFoundErrorMessage())
-                .url(request.getRequestURL().toString())
-                .build();
-        return ResponseEntity.status(status.value()).body(message);
+    public ResponseEntity<ErrorMessage> handleResourceNotFoundException(@NonNull final ConstraintViolationException exception) {
+        log.error(exception.getLogMessage(), exception);
+        final String responseMessage = environment.getProperty(exception.getErrorMessageKey());
+        final HttpStatus responseHttpStatus = exceptionWebHelper.getHttpStatus(exception, HttpStatus.BAD_REQUEST);
+        return exceptionWebHelper.getErrorResponse(exception, responseHttpStatus, responseMessage);
+    }
+
+    /**
+     * Handle AuthenticationExceptions.
+     */
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ErrorMessage> jwtException(@NonNull final JwtException exception) {
+        log.error("Exception was thrown because the token is not valid", exception);
+        final String responseMessage = environment.getProperty("jwt.invalid.token.error.message");
+        final HttpStatus responseHttpStatus = exceptionWebHelper.getHttpStatus(exception, HttpStatus.UNAUTHORIZED);
+        return exceptionWebHelper.getErrorResponse(exception, responseHttpStatus, responseMessage);
+    }
+
+    /**
+     * Handle all other exceptions.
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorMessage> handleAllExceptions(@NonNull final Exception exception) {
+        log.error("Unknown exception.", exception);
+        final String responseMessage = environment.getProperty("internal.server.error.message");
+        final HttpStatus responseHttpStatus = exceptionWebHelper.getHttpStatus(exception, HttpStatus.INTERNAL_SERVER_ERROR);
+        return exceptionWebHelper.getErrorResponse(exception, responseHttpStatus, responseMessage);
     }
 }
