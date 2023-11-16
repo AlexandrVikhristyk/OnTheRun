@@ -1,13 +1,13 @@
 package com.gachigang.ontherun.service;
 
+import com.gachigang.ontherun.common.mapper.BusinessMapper;
+import com.gachigang.ontherun.payload.business.BusinessDto;
 import com.gachigang.ontherun.payload.business.request.BusinessRequest;
-import com.gachigang.ontherun.payload.business.request.UpdateBusinessRequest;
 import com.gachigang.ontherun.persistence.entity.Business;
 import com.gachigang.ontherun.persistence.entity.User;
 import com.gachigang.ontherun.persistence.repository.BusinessRepository;
-import com.gachigang.ontherun.persistence.repository.UserRepository;
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -15,13 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@AllArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class BusinessService {
+
     private final BusinessRepository businessRepository;
-    private final UserRepository userRepository;
+    private final BusinessMapper businessMapper;
 
     @Transactional(readOnly = true)
     public List<Business> getAllBusiness(PageRequest pageRequest) {
@@ -36,20 +36,19 @@ public class BusinessService {
     }
 
     @Transactional
-    public Business updateBusiness(UpdateBusinessRequest businessRequest, @NonNull Long id) {
-        Business businessById = getBusinessById(id);
-        businessById.setName(businessRequest.getName());
-        businessById.setCountry(businessRequest.getCountry());
-        businessById.setCity(businessRequest.getCity());
-        if (!businessRequest.getOwners().equals(businessById.getOwners().stream().map(User::getId).collect(Collectors.toSet()))) {
-            businessById.getOwners().addAll(userRepository.findAllByIdIn(businessRequest.getOwners()));
-        }
-        return businessRepository.save(businessById);
+    public Business updateBusiness(@NonNull final BusinessDto businessDto,
+                                   @NonNull final Long id) {
+        Business business = getBusinessById(id);
+
+        businessMapper.updateBusiness(business, businessDto);
+        return businessRepository.save(business);
     }
 
     @Transactional
-    public void deleteBusinessById(@NonNull final Long id) {
+    public Business deleteBusinessById(@NonNull final Long id) {
+        Business business = getBusinessById(id);
         businessRepository.deleteBusinessById(id);
+        return business;
     }
 
     @Transactional(readOnly = true)
@@ -62,12 +61,8 @@ public class BusinessService {
 
     @Transactional
     public Business createBusiness(BusinessRequest businessRequest, User user) {
-        Business business = Business.builder()
-                .name(businessRequest.getName())
-                .country(businessRequest.getCountry())
-                .city(businessRequest.getCity())
-                .owners(Collections.singleton(user))
-                .build();
+        Business business = businessMapper.businessRequestToBusiness(businessRequest);
+        business.setOwners(Collections.singleton(user));
         return businessRepository.save(business);
     }
 }

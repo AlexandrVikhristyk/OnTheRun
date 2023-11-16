@@ -1,7 +1,7 @@
 package com.gachigang.ontherun.service;
 
+import com.gachigang.ontherun.payload.business.BusinessDto;
 import com.gachigang.ontherun.payload.business.request.BusinessRequest;
-import com.gachigang.ontherun.payload.business.request.UpdateBusinessRequest;
 import com.gachigang.ontherun.persistence.entity.Business;
 import com.gachigang.ontherun.persistence.entity.User;
 import com.gachigang.ontherun.persistence.repository.BusinessRepository;
@@ -68,7 +68,7 @@ class BusinessServiceTest {
 
     @Test
     void testUpdateBusinessWithoutChangedOwners() {
-        UpdateBusinessRequest updateBusinessRequest = new UpdateBusinessRequest(
+        BusinessDto businessDto = new BusinessDto(
                 "Boba",
                 "Ukraine",
                 "Kyiv",
@@ -86,15 +86,15 @@ class BusinessServiceTest {
         when(businessRepository.findById(VALID_ID)).thenReturn(Optional.of(business));
         when(businessRepository.save(any(Business.class))).thenReturn(business);
 
-        Business result = businessService.updateBusiness(updateBusinessRequest, VALID_ID);
+        Business result = businessService.updateBusiness(businessDto, VALID_ID);
 
         verify(businessRepository, times(1)).findById(VALID_ID);
-        verify(userRepository, times(0)).findAllByIdIn(updateBusinessRequest.getOwners());
+        verify(userRepository, times(0)).findAllByIdIn(businessDto.getOwners());
         verify(businessRepository, times(1)).save(business);
-        assertEquals(updateBusinessRequest.getName(), result.getName());
-        assertEquals(updateBusinessRequest.getCountry(), result.getCountry());
-        assertEquals(updateBusinessRequest.getCity(), result.getCity());
-        assertEquals(updateBusinessRequest.getOwners(),
+        assertEquals(businessDto.getName(), result.getName());
+        assertEquals(businessDto.getCountry(), result.getCountry());
+        assertEquals(businessDto.getCity(), result.getCity());
+        assertEquals(businessDto.getOwners(),
                 result.getOwners()
                         .stream()
                         .map(User::getId)
@@ -103,7 +103,7 @@ class BusinessServiceTest {
 
     @Test
     void testUpdateBusinessWithChangedOwners() {
-        UpdateBusinessRequest updateBusinessRequest = new UpdateBusinessRequest(
+        BusinessDto businessDto = new BusinessDto(
                 "Boba",
                 "Ukraine",
                 "Kyiv",
@@ -124,17 +124,17 @@ class BusinessServiceTest {
                 .build();
 
         when(businessRepository.findById(VALID_ID)).thenReturn(Optional.of(business));
-        when(userRepository.findAllByIdIn(updateBusinessRequest.getOwners())).thenReturn(new HashSet<>(Arrays.asList(owner1, owner2)));
+        when(userRepository.findAllByIdIn(businessDto.getOwners())).thenReturn(new HashSet<>(Arrays.asList(owner1, owner2)));
         when(businessRepository.save(any(Business.class))).thenReturn(business);
 
-        Business result = businessService.updateBusiness(updateBusinessRequest, VALID_ID);
+        Business result = businessService.updateBusiness(businessDto, VALID_ID);
 
         verify(businessRepository, times(1)).findById(VALID_ID);
-        verify(userRepository, times(1)).findAllByIdIn(updateBusinessRequest.getOwners());
+        verify(userRepository, times(1)).findAllByIdIn(businessDto.getOwners());
         verify(businessRepository, times(1)).save(business);
-        assertEquals(updateBusinessRequest.getName(), result.getName());
-        assertEquals(updateBusinessRequest.getCountry(), result.getCountry());
-        assertEquals(updateBusinessRequest.getCity(), result.getCity());
+        assertEquals(businessDto.getName(), result.getName());
+        assertEquals(businessDto.getCountry(), result.getCountry());
+        assertEquals(businessDto.getCity(), result.getCity());
     }
 
     @Test

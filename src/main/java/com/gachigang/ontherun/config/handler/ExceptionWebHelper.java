@@ -1,6 +1,6 @@
 package com.gachigang.ontherun.config.handler;
 
-import com.gachigang.ontherun.model.dto.ErrorMessage;
+import com.gachigang.ontherun.payload.ErrorMessage;
 import jakarta.annotation.Nonnull;
 import lombok.NonNull;
 import org.springframework.http.HttpStatus;

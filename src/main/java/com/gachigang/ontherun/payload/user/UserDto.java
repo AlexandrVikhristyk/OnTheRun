@@ -1,4 +1,4 @@
-package com.gachigang.ontherun.model.dto;
+package com.gachigang.ontherun.payload.user;
 
 import com.gachigang.ontherun.persistence.entity.User;
 import lombok.AllArgsConstructor;
@@ -9,14 +9,15 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
- *  DTO class to represent {@link User}.
+ * DTO class to represent {@link User}.
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
-    private String surname;
+
+    private String firstname;
     private String lastname;
     private String login;
     private String email;

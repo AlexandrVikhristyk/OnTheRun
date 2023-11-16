@@ -5,15 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.envers.NotAudited;
 
 import java.util.Set;
 
-@Builder
-@Entity
 @Data
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Department {
 
     @Id
@@ -21,7 +20,6 @@ public class Department {
     @Column(name = "id", updatable = false)
     private Long id;
 
-    @NotAudited
     @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
     private Set<User> users;
 

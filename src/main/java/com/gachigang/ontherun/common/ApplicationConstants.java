@@ -29,6 +29,15 @@ public class ApplicationConstants {
     }
 
     /**
+     * Inner utility class for dto validation.
+     */
+    @UtilityClass
+    public class DataValidation {
+        public static final int MIN_SIZE_STRING = 1;
+        public static final int MAX_SIZE_STRING = 255;
+    }
+
+    /**
      * Inner utility class for constants related to security part.
      */
     @UtilityClass

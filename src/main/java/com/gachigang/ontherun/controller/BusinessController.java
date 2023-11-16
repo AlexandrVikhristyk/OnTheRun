@@ -1,13 +1,15 @@
 package com.gachigang.ontherun.controller;
 
+import com.gachigang.ontherun.common.mapper.BusinessMapper;
 import com.gachigang.ontherun.payload.business.request.BusinessRequest;
-import com.gachigang.ontherun.payload.business.request.UpdateBusinessRequest;
+import com.gachigang.ontherun.payload.business.BusinessDto;
 import com.gachigang.ontherun.persistence.entity.Business;
 import com.gachigang.ontherun.persistence.entity.User;
 import com.gachigang.ontherun.service.BusinessService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,7 @@ import java.util.List;
 public class BusinessController {
 
     private final BusinessService businessService;
+    private final BusinessMapper businessMapper;
 
     /**
      * Retrieves a list of businesses with optional pagination.
@@ -34,22 +37,26 @@ public class BusinessController {
      * @return A list of Business objects.
      */
     @GetMapping
-    public List<Business> getAllBusiness(
+    public ResponseEntity<List<BusinessDto>> getAllBusiness(
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "10") int size
     ) {
-        return businessService.getAllBusiness(PageRequest.of(page, size));
+        List<Business> businesses = businessService.getAllBusiness(PageRequest.of(page, size));
+        List<BusinessDto> response = businessMapper.businessesToBusinessDtos(businesses);
+        return ResponseEntity.ok(response);
     }
 
     /**
      * Update an existing user.
      *
-     * @param updateBusinessRequest A {@link UpdateBusinessRequest} object representing the updated user information.
-     * @return A {@link ResponseEntity} containing the updated {@link UpdateBusinessRequest} object.
+     * @param businessDto A {@link BusinessDto} object representing the updated user information.
+     * @return A {@link ResponseEntity} containing the updated {@link BusinessDto} object.
      */
     @PutMapping("/{id}")
-    public Business updateBusiness(@RequestBody UpdateBusinessRequest updateBusinessRequest, @PathVariable Long id) {
-        return businessService.updateBusiness(updateBusinessRequest, id);
+    public ResponseEntity<BusinessDto> updateBusiness(@RequestBody BusinessDto businessDto, @PathVariable Long id) {
+        final Business business = businessService.updateBusiness(businessDto, id);
+        final BusinessDto response = businessMapper.businessToBusinessDto(business);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     /**
@@ -60,7 +67,7 @@ public class BusinessController {
      * or an HTTP status of NOT_FOUND if the business was not found
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBusinessById(@PathVariable Long id) {
+    public ResponseEntity<BusinessDto> deleteBusinessById(@PathVariable final Long id) {
         businessService.deleteBusinessById(id);
         log.info("Business with id: {} was deleted", id);
         return ResponseEntity.ok().build();
@@ -72,13 +79,16 @@ public class BusinessController {
      * @return objects
      */
     @GetMapping("/owner")
-    public List<Business> findBusinessByOwners(@AuthenticationPrincipal User user) {
-        return businessService.findBusinessByOwners(user);
+    public ResponseEntity<List<BusinessDto>> findBusinessByOwners(@AuthenticationPrincipal User user) {
+        List<Business> business = businessService.findBusinessByOwners(user);
+        List<BusinessDto> response = businessMapper.businessesToBusinessDtos(business);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public Business createBusiness(BusinessRequest businessRequest, @AuthenticationPrincipal User user) {
-        return businessService.createBusiness(businessRequest, user);
+    public ResponseEntity<BusinessDto> createBusiness(BusinessRequest businessRequest, @AuthenticationPrincipal User user) {
+        Business business = businessService.createBusiness(businessRequest, user);
+        BusinessDto response = businessMapper.businessToBusinessDto(business);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
-
