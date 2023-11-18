@@ -1,4 +1,4 @@
-package com.gachigang.ontherun.model.dto;
+package com.gachigang.ontherun.payload.user;
 
 import com.gachigang.ontherun.persistence.entity.User;
 import lombok.AllArgsConstructor;

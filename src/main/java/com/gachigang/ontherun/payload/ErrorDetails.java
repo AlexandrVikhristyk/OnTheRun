@@ -1,4 +1,4 @@
-package com.gachigang.ontherun.model.dto;
+package com.gachigang.ontherun.payload;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

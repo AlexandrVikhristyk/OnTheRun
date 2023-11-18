@@ -10,8 +10,8 @@ import java.util.List;
 
 @Mapper
 public interface CategoryMapper {
-    CategoryResponse toDto (Category entity);
-    List<CategoryResponse> toDtos (List<Category> entities);
+    CategoryResponse toDto(Category entity);
+    List<CategoryResponse> toDtos(List<Category> entities);
     Category fromDto(CreateCategoryRequest dto);
     Category fromDto(UpdateCategoryRequest dto);
 

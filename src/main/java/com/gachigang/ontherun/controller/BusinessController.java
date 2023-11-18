@@ -67,7 +67,7 @@ public class BusinessController {
     }
 
     /**
-     * Endpoint for getting the owner of the business
+     * Endpoint for getting the business of Owner
      *
      * @return objects
      */

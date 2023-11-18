@@ -13,28 +13,40 @@ import java.time.Duration;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateProductRequest {
+
     @NotNull(message = "Name cannot be null.")
     private String name;
+
     @NotNull(message = "Price cannot be null.")
     private Double price;
+
     @NotNull(message = "Type time of cooking in minutes.")
     private Duration cookingTime;
+
     @NotNull(message = "Write ingredients")
     private String ingredients;
+
     @NotNull(message = "Write caloric")
     private Integer caloricContent;
+
     @NotNull(message = "Weight cannot be null.")
     private Double weight;
+
     @NotNull(message = "Upload the image.")
     private byte[] image;
+
     @NotNull(message = "Write if this product can be delivered")
     private Boolean deliverable;
+
     @NotNull(message = "Is this product active?")
     private Boolean active;
+
     @NotNull(message = "Do we have this product?")
     private Boolean absent;
+
     @NotNull(message = "Write the id of category")
     private Long categoryId;
+
     @NotNull(message = "Write the id of department")
     private Long departmentId;
 

@@ -1,7 +1,7 @@
 package com.gachigang.ontherun.config.handler;
 
 import com.gachigang.ontherun.common.ExceptionMessage;
-import com.gachigang.ontherun.model.dto.ErrorDetails;
+import com.gachigang.ontherun.payload.ErrorDetails;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;

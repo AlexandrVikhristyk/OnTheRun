@@ -1,6 +1,6 @@
 package com.gachigang.ontherun.common.mapper;
 
-import com.gachigang.ontherun.model.dto.UserDto;
+import com.gachigang.ontherun.payload.user.UserDto;
 import com.gachigang.ontherun.payload.user.request.LoginRequest;
 import com.gachigang.ontherun.payload.user.request.RegisterRequest;
 import com.gachigang.ontherun.persistence.entity.User;

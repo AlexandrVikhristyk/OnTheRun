@@ -3,8 +3,6 @@ package com.gachigang.ontherun.service;
 import com.gachigang.ontherun.persistence.entity.Category;
 import com.gachigang.ontherun.persistence.entity.Department;
 import com.gachigang.ontherun.persistence.entity.Product;
-import com.gachigang.ontherun.persistence.repository.CategoryRepository;
-import com.gachigang.ontherun.persistence.repository.DepartmentRepository;
 import com.gachigang.ontherun.persistence.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
@@ -19,9 +17,11 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
 public class ProductServiceTest {
 
@@ -30,12 +30,6 @@ public class ProductServiceTest {
 
     @Mock
     private ProductRepository productRepository;
-
-    @Mock
-    private CategoryRepository categoryRepository;
-
-    @Mock
-    private DepartmentRepository departmentRepository;
 
     @Mock
     private CategoryService categoryService;
@@ -100,7 +94,6 @@ public class ProductServiceTest {
 
     @Test
     public void testUpdateProduct() {
-
         Product existingProduct = Product.builder()
                 .id(1L)
                 .categoryId(1L)
@@ -121,10 +114,10 @@ public class ProductServiceTest {
                 .id(4L)
                 .build();
 
-        Mockito.when(productRepository.existsProductById(1L)).thenReturn(true);
+        Mockito.when(productRepository.findById(1L)).thenReturn(Optional.of(existingProduct));
         Mockito.when(categoryService.findById(3L)).thenReturn(category);
         Mockito.when(departmentService.findByID(4L)).thenReturn(department);
-        Mockito.when(productRepository.save(Mockito.any(Product.class))).thenReturn(updatedProduct);
+        Mockito.when(productRepository.save(updatedProduct)).thenReturn(updatedProduct);
 
         Product updated = productService.updateProduct(updatedProduct);
 
@@ -132,7 +125,7 @@ public class ProductServiceTest {
         Assertions.assertEquals(category, updated.getCategory());
         Assertions.assertEquals(department, updated.getDepartment());
 
-        Mockito.verify(productRepository, Mockito.times(1)).existsProductById(1L);
+        Mockito.verify(productRepository, Mockito.times(1)).findById(1L);
         Mockito.verify(categoryService, Mockito.times(1)).findById(3L);
         Mockito.verify(departmentService, Mockito.times(1)).findByID(4L);
         Mockito.verify(productRepository, Mockito.times(1)).save(updatedProduct);
@@ -140,20 +133,20 @@ public class ProductServiceTest {
 
     @Test
     public void testUpdateProduct_ProductNotFound() {
-        Product nonExistingProduct = Product.builder()
+        Product updatedProduct = Product.builder()
                 .id(1L)
                 .categoryId(3L)
                 .departmentId(4L)
                 .build();
 
-        Mockito.when(productRepository.existsProductById(1L)).thenReturn(false);
+        Mockito.when(productRepository.findById(1L)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(EntityNotFoundException.class, () -> productService.updateProduct(nonExistingProduct));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> productService.updateProduct(updatedProduct));
 
-        Mockito.verify(productRepository, Mockito.times(1)).existsProductById(1L);
+        Mockito.verify(productRepository, Mockito.times(1)).findById(1L);
         Mockito.verify(categoryService, Mockito.never()).findById(3L);
         Mockito.verify(departmentService, Mockito.never()).findByID(4L);
-        Mockito.verify(productRepository, Mockito.never()).save(Mockito.any(Product.class));
+        Mockito.verify(productRepository, Mockito.never()).save(updatedProduct);
     }
 
 }

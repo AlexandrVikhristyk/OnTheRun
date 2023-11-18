@@ -12,5 +12,5 @@ import java.util.Set;
 public interface UserRepository extends CrudRepository<User, Long> {
     Optional<User> findUserByEmail(String email);
     Set<User> findAllByIdIn(Set<Long> idSet);
-    boolean existsByEmail(String email);
+    Boolean existsByEmail(String email);
 }
