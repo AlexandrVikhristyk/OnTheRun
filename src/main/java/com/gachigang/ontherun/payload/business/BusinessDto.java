@@ -10,8 +10,8 @@ import lombok.Getter;
 
 import java.util.Set;
 
-import static com.gachigang.ontherun.common.ApplicationConstants.DataValidation.*;
 import static com.gachigang.ontherun.common.ApplicationConstants.DataValidation.MAX_SIZE_STRING;
+import static com.gachigang.ontherun.common.ApplicationConstants.DataValidation.MIN_SIZE_STRING;
 
 @Builder
 @AllArgsConstructor
@@ -22,18 +22,18 @@ public class BusinessDto {
     @NotBlank
     @Size(min = MIN_SIZE_STRING,
             max = MAX_SIZE_STRING)
-    String name;
+    private String name;
 
     @NotBlank
     @Size(min = MIN_SIZE_STRING,
             max = MAX_SIZE_STRING)
-    String country;
+    private String country;
 
     @Size(min = MIN_SIZE_STRING,
             max = MAX_SIZE_STRING)
     @NotBlank
-    String city;
+    private String city;
 
     @Nullable
-    Set<Long> owners;
+    private Set<Long> owners;
 }

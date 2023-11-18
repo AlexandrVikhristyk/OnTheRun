@@ -1,5 +1,6 @@
 package com.gachigang.ontherun.controller;
 
+import com.gachigang.ontherun.common.mapper.DepartmentMapper;
 import com.gachigang.ontherun.persistence.entity.User;
 import com.gachigang.ontherun.service.DepartmentService;
 import org.junit.jupiter.api.Test;
@@ -13,8 +14,12 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class DepartmentControllerTest {
+
     @Mock
     private DepartmentService departmentService;
+
+    @Mock
+    private DepartmentMapper departmentMapper;
 
     @InjectMocks
     private DepartmentController departmentController;

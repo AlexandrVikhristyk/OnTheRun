@@ -1,23 +1,26 @@
 package com.gachigang.ontherun.payload.department;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.gachigang.ontherun.persistence.entity.Business;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-
-import java.util.List;
+import lombok.Setter;
 
 @AllArgsConstructor
-@Getter
+@Setter
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DepartmentDto {
+public class DepartmentUserDto {
 
     @NotNull
-    private List<DepartmentUserDto> users;
+    private String firstname;
 
     @NotNull
-    private Business business;
+    private String lastname;
+
+    @NotNull
+    private String login;
+
+    @NotNull
+    private String email;
 }

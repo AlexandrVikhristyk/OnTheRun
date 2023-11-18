@@ -56,6 +56,7 @@ public class BusinessController {
     public ResponseEntity<BusinessDto> updateBusiness(@RequestBody BusinessDto businessDto, @PathVariable Long id) {
         final Business business = businessService.updateBusiness(businessDto, id);
         final BusinessDto response = businessMapper.businessToBusinessDto(business);
+        log.info("The business with id: {} has updated", id);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -89,6 +90,7 @@ public class BusinessController {
     public ResponseEntity<BusinessDto> createBusiness(BusinessRequest businessRequest, @AuthenticationPrincipal User user) {
         Business business = businessService.createBusiness(businessRequest, user);
         BusinessDto response = businessMapper.businessToBusinessDto(business);
+        log.info("A new business with id: {} has created", business.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

@@ -1,5 +1,6 @@
 package com.gachigang.ontherun.service;
 
+import com.gachigang.ontherun.common.exception.NotFoundException;
 import com.gachigang.ontherun.common.mapper.BusinessMapper;
 import com.gachigang.ontherun.payload.business.BusinessDto;
 import com.gachigang.ontherun.payload.business.request.BusinessRequest;
@@ -32,7 +33,7 @@ public class BusinessService {
     @Transactional(readOnly = true)
     public Business getBusinessById(@NonNull final Long id) {
         return businessRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Business with id " + id + " not found"));
+                .orElseThrow(() -> new NotFoundException(Business.class));
     }
 
     @Transactional
@@ -47,7 +48,7 @@ public class BusinessService {
     @Transactional
     public Business deleteBusinessById(@NonNull final Long id) {
         Business business = getBusinessById(id);
-        businessRepository.deleteBusinessById(id);
+        businessRepository.delete(business);
         return business;
     }
 

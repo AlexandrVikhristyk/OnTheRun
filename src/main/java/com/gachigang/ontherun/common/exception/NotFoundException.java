@@ -11,4 +11,8 @@ public class NotFoundException extends ApplicationException {
     public NotFoundException() {
         super("not.found.error.message", "Exception was thrown because the resource was not found.");
     }
+
+    public NotFoundException(Class<?> clazz) {
+        super("not.found.error.message", "Exception was thrown because the " + clazz.getName() + " was not found.");
+    }
 }

@@ -23,7 +23,7 @@ public class Department {
     @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
     private Set<User> users;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "business_id")
     private Business business;
 
