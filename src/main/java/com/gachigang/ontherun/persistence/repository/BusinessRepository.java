@@ -21,9 +21,8 @@ public interface BusinessRepository extends JpaRepository<Business, Long> {
      * Deletes a business by its ID.
      *
      * @param id The ID of the business to be deleted.
-     * @return The deleted business.
      */
-    Business deleteBusinessById(Long id);
+    void deleteBusinessById(Long id);
 
     /**
      * Finds a list of businesses owned by the specified user.

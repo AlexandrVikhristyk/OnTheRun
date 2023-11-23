@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +25,7 @@ public class BusinessService {
 
     private final BusinessRepository businessRepository;
     private final BusinessMapper businessMapper;
+    private final UserService userService;
 
     @Transactional(readOnly = true)
     public List<Business> getAllBusiness(PageRequest pageRequest) {
@@ -40,16 +43,19 @@ public class BusinessService {
     public Business updateBusiness(@NonNull final BusinessDto businessDto,
                                    @NonNull final Long id) {
         Business business = getBusinessById(id);
+        Set<User> users = businessDto.getOwners().stream()
+                .map(userService::getUserById)
+                .collect(Collectors.toSet());
 
+        business.setOwners(users);
         businessMapper.updateBusiness(business, businessDto);
         return businessRepository.save(business);
     }
 
     @Transactional
-    public Business deleteBusinessById(@NonNull final Long id) {
+    public void deleteBusinessById(@NonNull final Long id) {
         Business business = getBusinessById(id);
         businessRepository.delete(business);
-        return business;
     }
 
     @Transactional(readOnly = true)
