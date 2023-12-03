@@ -137,9 +137,8 @@ class BusinessServiceTest {
 
     @Test
     public void testCreateBusiness() {
-        // Arrange
         BusinessRequest businessRequest = new BusinessRequest();
-        User user = new User(); // Mock or create a real User object as needed
+        User user = new User();
         Business businessToSave = new Business();
         Business savedBusiness = new Business();
 

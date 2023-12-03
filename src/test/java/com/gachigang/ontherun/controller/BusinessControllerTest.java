@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.HashSet;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -52,9 +53,16 @@ class BusinessControllerTest {
 
         verify(businessService, times(1)).updateBusiness(testBusinessDto, businessId);
         verify(businessMapper, times(1)).businessToBusinessDto(testBusinessEntity);
+        verify(businessService, times(1)).updateBusiness(testBusinessDto, businessId);
+        verify(businessMapper, times(1)).businessToBusinessDto(testBusinessEntity);
+
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(testBusinessDto, response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("TestName", response.getBody().getName());
+        assertEquals("TestCountry", response.getBody().getCountry());
+        assertNotNull(response);
     }
 
     @Test
