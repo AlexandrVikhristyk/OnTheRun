@@ -2,7 +2,7 @@ package com.gachigang.ontherun.config.handler;
 
 import com.gachigang.ontherun.common.exception.ApplicationException;
 import com.gachigang.ontherun.common.exception.ConstraintViolationException;
-import com.gachigang.ontherun.model.dto.ErrorMessage;
+import com.gachigang.ontherun.payload.ErrorMessage;
 import io.jsonwebtoken.JwtException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

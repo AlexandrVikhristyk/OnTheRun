@@ -35,9 +35,11 @@ public class DepartmentServiceTest {
                 .id(userId)
                 .lastname("Doe")
                 .build();
+
         Department department = new Department();
         department.setId(1L);
         department.setUsers(Set.of(user));
+
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(departmentRepository.findDepartmentByUsersContains(user)).thenReturn(department);
 

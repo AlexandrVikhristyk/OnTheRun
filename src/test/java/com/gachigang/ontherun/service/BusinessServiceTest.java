@@ -1,7 +1,9 @@
 package com.gachigang.ontherun.service;
 
+import com.gachigang.ontherun.common.exception.NotFoundException;
+import com.gachigang.ontherun.common.mapper.BusinessMapper;
+import com.gachigang.ontherun.payload.business.BusinessDto;
 import com.gachigang.ontherun.payload.business.request.BusinessRequest;
-import com.gachigang.ontherun.payload.business.request.UpdateBusinessRequest;
 import com.gachigang.ontherun.persistence.entity.Business;
 import com.gachigang.ontherun.persistence.entity.User;
 import com.gachigang.ontherun.persistence.repository.BusinessRepository;
@@ -16,20 +18,36 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class BusinessServiceTest {
-    private final Long VALID_ID = 1L;
-    private final Long INVALID_ID = 7L;
+
+    private final Long VALID_BUSINESS_ID = 1L;
+    private final Long INVALID_BUSINESS_ID = 7L;
+
+    private static final Business BUSINESS = Business.builder()
+            .id(1L)
+            .name("Sample Business")
+            .country("Sample Country")
+            .city("Sample City")
+            .owners(new HashSet<>())
+            .departments(new HashSet<>())
+            .build();
 
     @Mock
     private BusinessRepository businessRepository;
+
+    @Mock
+    private BusinessMapper businessMapper;
+
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private UserService userService;
 
     @InjectMocks
     private BusinessService businessService;
@@ -47,94 +65,44 @@ class BusinessServiceTest {
 
     @Test
     void testGetBusinessByIdExists() {
-        Business business = Business.builder()
-                .id(VALID_ID)
-                .city("Kyiv")
-                .country("Ukraine")
-                .build();
-        when(businessRepository.findById(VALID_ID)).thenReturn(Optional.of(business));
-        Business result = businessService.getBusinessById(VALID_ID);
+        when(businessRepository.findById(VALID_BUSINESS_ID)).thenReturn(Optional.of(BUSINESS));
+
+        Business result = businessService.getBusinessById(VALID_BUSINESS_ID);
+
         assertNotNull(result);
-        assertEquals(business.getId(), result.getId());
-        assertEquals(business.getCity(), result.getCity());
-        assertEquals(business.getCountry(), result.getCountry());
+        assertEquals(BUSINESS, result);
     }
 
     @Test
     void testGetBusinessByIdNotExists() {
-        when(businessRepository.findById(INVALID_ID)).thenReturn(Optional.empty());
-        assertThrows(IllegalArgumentException.class, () -> businessService.getBusinessById(INVALID_ID));
+        when(businessRepository.findById(INVALID_BUSINESS_ID)).thenReturn(Optional.empty());
+        assertThrows(NotFoundException.class, () -> businessService.getBusinessById(INVALID_BUSINESS_ID));
+
     }
 
     @Test
-    void testUpdateBusinessWithoutChangedOwners() {
-        UpdateBusinessRequest updateBusinessRequest = new UpdateBusinessRequest(
-                "Boba",
-                "Ukraine",
-                "Kyiv",
-                new HashSet<>(Arrays.asList(2L, 3L))
-        );
-        User owner1 = User.builder().id(2L).build();
-        User owner2 = User.builder().id(3L).build();
-        Business business = Business.builder()
-                .id(VALID_ID)
-                .city("Kyiv")
-                .country("Ukraine")
-                .owners(new HashSet<>(Arrays.asList(owner1, owner2)))
-                .build();
-
-        when(businessRepository.findById(VALID_ID)).thenReturn(Optional.of(business));
-        when(businessRepository.save(any(Business.class))).thenReturn(business);
-
-        Business result = businessService.updateBusiness(updateBusinessRequest, VALID_ID);
-
-        verify(businessRepository, times(1)).findById(VALID_ID);
-        verify(userRepository, times(0)).findAllByIdIn(updateBusinessRequest.getOwners());
-        verify(businessRepository, times(1)).save(business);
-        assertEquals(updateBusinessRequest.getName(), result.getName());
-        assertEquals(updateBusinessRequest.getCountry(), result.getCountry());
-        assertEquals(updateBusinessRequest.getCity(), result.getCity());
-        assertEquals(updateBusinessRequest.getOwners(),
-                result.getOwners()
-                        .stream()
-                        .map(User::getId)
-                        .collect(Collectors.toSet()));
-    }
-
-    @Test
-    void testUpdateBusinessWithChangedOwners() {
-        UpdateBusinessRequest updateBusinessRequest = new UpdateBusinessRequest(
-                "Boba",
-                "Ukraine",
-                "Kyiv",
-                new HashSet<>(Arrays.asList(2L, 3L))
+    public void testUpdateBusiness() {
+        Long businessId = 1L;
+        BusinessDto businessDto = new BusinessDto(
+                "SampleName",
+                "SampleCountry",
+                "SampleCity",
+                Set.of(1L, 2L, 3L)
         );
 
-        User owner1 = new User();
-        User owner2 = new User();
-        User owner3 = new User();
-        owner1.setId(2L);
-        owner2.setId(3L);
-        owner3.setId(4L);
-        Business business = Business.builder()
-                .id(VALID_ID)
-                .city("Kyiv")
-                .country("Ukraine")
-                .owners(new HashSet<>(Arrays.asList(owner1, owner2, owner3)))
-                .build();
+        Business existingBusiness = new Business();
+        when(businessRepository.findById(businessId)).thenReturn(java.util.Optional.of(existingBusiness));
 
-        when(businessRepository.findById(VALID_ID)).thenReturn(Optional.of(business));
-        when(userRepository.findAllByIdIn(updateBusinessRequest.getOwners())).thenReturn(new HashSet<>(Arrays.asList(owner1, owner2)));
-        when(businessRepository.save(any(Business.class))).thenReturn(business);
+        User user1 = User.builder().id(1L).build();
+        User user2 = User.builder().id(2L).build();
 
-        Business result = businessService.updateBusiness(updateBusinessRequest, VALID_ID);
+        when(userService.getUserById(any(Long.class))).thenReturn(user1, user2);
 
-        verify(businessRepository, times(1)).findById(VALID_ID);
-        verify(userRepository, times(1)).findAllByIdIn(updateBusinessRequest.getOwners());
-        verify(businessRepository, times(1)).save(business);
-        assertEquals(updateBusinessRequest.getName(), result.getName());
-        assertEquals(updateBusinessRequest.getCountry(), result.getCountry());
-        assertEquals(updateBusinessRequest.getCity(), result.getCity());
+        businessService.updateBusiness(businessDto, businessId);
+
+        verify(userService, times(3)).getUserById(any(Long.class));
+        verify(businessMapper, times(1)).updateBusiness(any(Business.class), eq(businessDto));
+        verify(businessRepository, times(1)).save(any(Business.class));
     }
 
     @Test
@@ -168,27 +136,20 @@ class BusinessServiceTest {
     }
 
     @Test
-    void testCreateBusiness() {
+    public void testCreateBusiness() {
+        BusinessRequest businessRequest = new BusinessRequest();
         User user = new User();
-        final BusinessRequest businessRequest = BusinessRequest.builder()
-                .name("TestName")
-                .country("TestCountry")
-                .city("TestCity")
-                .build();
-        final Business business = Business.builder()
-                .name(businessRequest.getName())
-                .country(businessRequest.getCountry())
-                .city(businessRequest.getCity())
-                .owners(Collections.singleton(user))
-                .build();
+        Business businessToSave = new Business();
+        Business savedBusiness = new Business();
 
-        when(businessRepository.save(business)).thenReturn(business);
+        when(businessMapper.businessRequestToBusiness(businessRequest)).thenReturn(businessToSave);
+        when(businessRepository.save(businessToSave)).thenReturn(savedBusiness);
+
         Business result = businessService.createBusiness(businessRequest, user);
 
-
         assertNotNull(result);
-        assertEquals(businessRequest.getName(), result.getName());
-        assertEquals(businessRequest.getCountry(), result.getCountry());
-        assertEquals(businessRequest.getCity(), result.getCity());
+        assertEquals(savedBusiness, result);
+
+        verify(businessRepository, times(1)).save(businessToSave);
     }
 }
